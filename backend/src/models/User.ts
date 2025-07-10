@@ -31,8 +31,8 @@ class User {
     }
 
     static async getByName(usernameIn: String) {
-        const user = await UserModel.findOne({ username: usernameIn })
-        return user
+      const user = await UserModel.findOne({ username: usernameIn })
+      return user
     }
 
     static async signUp(user: User) {

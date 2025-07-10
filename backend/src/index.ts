@@ -3,13 +3,19 @@ import express from "express"
 import mongoose from "mongoose"
 import MainRouter from "./routes/MainRouter"
 import errorHandler from "./middleware/errorHandler"
+import cors from 'cors'
 
 const app = express()
 const port = 3000
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
+
 app.use(express.json())
 
-const uri = "mongodb+srv://dev:dev@cluster0.ylc53cj.mongodb.net/voyage?retryWrites=true&w=majority&appName=Cluster0"
+const uri = process.env.CONNECTION_STRING!
 
 mongoose.connect(uri)
     .then(() => console.log("Connected to database"))

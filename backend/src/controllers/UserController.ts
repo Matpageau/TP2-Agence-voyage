@@ -15,17 +15,18 @@ const UserController = {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const { username, password } = req.body
-
+            
+            
             const user = await User.getByName(username)
-
+            
             if (!user) {
-                res.status(403).send("INVALID_USERNAME")
+                return res.status(403).send({ code: "USER_NOT_FOUND" })
                 /* const error = {message: "INVALID_USERNAME", status: 403}
                 throw error */
             }
-
-            if (user?.password !== password) {
-                res.status(403).send("INVALID_PASSWORD")
+            
+            if (user.password !== password) {
+                return res.status(403).send({ code: "INVALID_PASSWORD" })
                 /* const error = {message: "INVALID_PASSWORD", status: 403}
                 throw error */
             }
@@ -38,7 +39,7 @@ const UserController = {
                 httpOnly: true
             })
 
-            res.status(200).send(token)
+            return res.status(200).send(token)
         } catch (err) {
             next(err)
         }

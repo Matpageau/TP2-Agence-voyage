@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { InputTypeHTMLAttribute } from 'vue';
+
 const props = defineProps<{
   modelValue: string
   placeholder?: string
   error?: string
+  type?: InputTypeHTMLAttribute
 }>()
 
 const emit = defineEmits<{
@@ -13,7 +16,7 @@ const emit = defineEmits<{
 <template>
   <div class="flex flex-col w-full">
     <input
-      type="text"
+      :type="props.type ?? 'text'"
       :placeholder="props.placeholder"
       class="w-full bg-white text-black p-2 rounded-md border border-gray-300"
       :class="{ 'border-red-500': props.error }"

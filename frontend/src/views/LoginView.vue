@@ -29,13 +29,13 @@ const handleLogin = async () => {
   }
 
   try {
-    const res = await axios.post(`/login`, payload)
-
+    const res = await axios.post(`http://localhost:3000/login`, payload, {withCredentials: true})
+    
     if(res.data) {
       router.push("/")
     }
   } catch (err: any) {
-    error.value = err.response?.data?.code || "UNKNOWN_ERROR"
+    error.value = err.response.data.code || "UNKNOWN_ERROR"
   }
 }
 
@@ -50,7 +50,7 @@ const handleRegister = async () => {
   }
 
   try {
-    const res = await axios.post(`/signup`, payload)
+    const res = await axios.post(`http://localhost:3000/signup`, payload)
 
     if(res.data) {
       loginUsername.value = registerUsername.value
@@ -59,7 +59,7 @@ const handleRegister = async () => {
       await handleLogin()
     }
   } catch (err: any) {
-    error.value = err.response?.data?.code || "UNKNOWN_ERROR"
+    error.value = err.response.data.code || "UNKNOWN_ERROR"
   }
 }
 
@@ -82,6 +82,7 @@ const handleRegister = async () => {
               :error="error === 'INVALID_PASSWORD' ? t('invalidPassword') : ''"
               v-model="loginPassword" 
               :placeholder="t('password')"
+              type="password"
             />
           </div>
           <div class="flex justify-center w-full mt-30">
@@ -94,7 +95,7 @@ const handleRegister = async () => {
           <h1 class="font-bold text-6xl text-[var(--marine)] text-center">{{ t("register") }}</h1>
           <div class="flex flex-col gap-4 mt-20">
             <TextInput
-              :error="error === 'USERNAME_ALREADY_TAKEN' ? t('usernameAlreadyTaken') : ''"
+              :error="error === 'USERNAME_TAKEN' ? t('usernameAlreadyTaken') : ''"
               v-model="registerUsername" 
               :placeholder="t('username')"
             />
@@ -102,11 +103,13 @@ const handleRegister = async () => {
               :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPassword"
               :placeholder="t('password')"
+              type="password"
             />
             <TextInput 
               :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPasswordConfirm"
               :placeholder="t('confirmPassword')"
+              type="password"
             />
           </div>
           <div class="flex justify-center w-full mt-12">
