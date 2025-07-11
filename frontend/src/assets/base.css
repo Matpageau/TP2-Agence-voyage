@@ -33,7 +33,8 @@
   --light-blue: #30638E;
   --marine: #003D5B;
 
-  --cyan_hover:rgb(1, 100, 116);
+  --orange_hover: #e29d2e;
+  --cyan_hover:#016474;
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
