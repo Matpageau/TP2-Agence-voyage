@@ -12,26 +12,21 @@ class User {
         this.role = user.role;
     }
     static async verify(user) {
-        let error = null;
-        if (!user.username) {
-            error = "INVALID_USERNAME";
+        const userFound = await UserModel_1.default.findOne({ username: user.username });
+        if (userFound) {
+            return "USERNAME_TAKEN";
         }
-        if (!user.password) {
-            error = "INVALID_PASSWORD";
-        }
-        if (error) {
-            throw Object.assign(new Error(error), { status: 400 });
-        }
+        return null;
     }
     static async getAll() {
         const users = await UserModel_1.default.find();
         if (!users) {
-            throw Object.assign(new Error("USER_NOT_FOUND"), { status: 404 });
+            throw new Error("USER_NOT_FOUND");
         }
         return users;
     }
-    static async getByName(usernameIn) {
-        const user = await UserModel_1.default.findOne({ username: usernameIn });
+    static async getByName(name) {
+        const user = await UserModel_1.default.findOne({ username: name });
         return user;
     }
     static async signUp(user) {

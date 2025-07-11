@@ -16,19 +16,14 @@ const UserController = {
         try {
             const { username, password } = req.body
             
-            
             const user = await User.getByName(username)
             
             if (!user) {
                 return res.status(403).send({ code: "USER_NOT_FOUND" })
-                /* const error = {message: "INVALID_USERNAME", status: 403}
-                throw error */
             }
             
             if (user.password !== password) {
                 return res.status(403).send({ code: "INVALID_PASSWORD" })
-                /* const error = {message: "INVALID_PASSWORD", status: 403}
-                throw error */
             }
 
             const payload = { id: user?.id }
@@ -48,7 +43,10 @@ const UserController = {
     signUp: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const user = req.body
-            User.verify(user)
+            const error = await User.verify(user)
+            if (error) {
+                return res.status(400).send({ code: error })
+            }
             user.role = "user"
             const newUser = await User.signUp(user)
             res.status(200).json(newUser)

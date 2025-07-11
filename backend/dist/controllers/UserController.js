@@ -21,13 +21,9 @@ const UserController = {
             const user = await User_1.default.getByName(username);
             if (!user) {
                 return res.status(403).send({ code: "USER_NOT_FOUND" });
-                /* const error = {message: "INVALID_USERNAME", status: 403}
-                throw error */
             }
             if (user.password !== password) {
                 return res.status(403).send({ code: "INVALID_PASSWORD" });
-                /* const error = {message: "INVALID_PASSWORD", status: 403}
-                throw error */
             }
             const payload = { id: user?.id };
             const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
@@ -43,7 +39,10 @@ const UserController = {
     signUp: async (req, res, next) => {
         try {
             const user = req.body;
-            User_1.default.verify(user);
+            const error = await User_1.default.verify(user);
+            if (error) {
+                return res.status(400).send({ code: error });
+            }
             user.role = "user";
             const newUser = await User_1.default.signUp(user);
             res.status(200).json(newUser);

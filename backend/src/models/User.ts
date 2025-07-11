@@ -14,24 +14,21 @@ class User {
     }
 
     static async verify(user: User) {
-        let error = null
-        if (!user.username) {error = "INVALID_USERNAME"}
-        if (!user.password) {error = "INVALID_PASSWORD"}
-        if (error) {
-            throw Object.assign(new Error(error), { status: 400})
-        }
+        const userFound = await UserModel.findOne({ username: user.username })
+        if (userFound) {return "USERNAME_TAKEN"}
+        return null
     }
 
     static async getAll() {
         const users = await UserModel.find()
         if (!users) {
-            throw Object.assign(new Error("USER_NOT_FOUND"), { status: 404})
+            throw new Error("USER_NOT_FOUND")
         }
         return users
     }
 
-    static async getByName(usernameIn: String) {
-      const user = await UserModel.findOne({ username: usernameIn })
+    static async getByName(name: String) {
+      const user = await UserModel.findOne({ username: name })
       return user
     }
 
@@ -39,7 +36,6 @@ class User {
         const newUser = await UserModel.create(user)
         return newUser
     }
-    
 }
 
 export default User
