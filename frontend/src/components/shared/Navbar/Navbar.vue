@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ShoppingCart from '@/components/icons/ShoppingCart.vue';
-import type { UserType } from '@/types/User';
+import type { UserData } from '@/types/User';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  user: UserType | null
+  user: UserData | null
 }>()
 
 const { locale, t } = useI18n()
