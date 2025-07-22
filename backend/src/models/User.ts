@@ -1,4 +1,5 @@
 import UserModel from "./UserModel"
+import createError from "../utils/createError";
 
 class User {
     id: String;
@@ -14,27 +15,37 @@ class User {
     }
 
     static async verify(user: User) {
+        if (!user.username) {return createError("Username can't be empty", 409, "INVALID_USERNAME")}
+        if (!user.password) {return createError("Password can't be empty", 409, "INVALID_PASSWORD")}
         const userFound = await UserModel.findOne({ username: user.username })
-        if (userFound) {return "USERNAME_TAKEN"}
-        return null
+        if (userFound) {
+            return createError("Username already exist", 409, "USERNAME_TAKEN")
+        }
+        else return null
     }
 
     static async getAll() {
-        const users = await UserModel.find()
-        if (!users) {
-            throw new Error("USER_NOT_FOUND")
-        }
-        return users
+        return await UserModel.find()
+    }
+
+    static async getById(id: String) {
+        return await UserModel.findById(id)
     }
 
     static async getByName(name: String) {
-      const user = await UserModel.findOne({ username: name })
-      return user
+        return await UserModel.findOne({ username: name })
     }
 
     static async signUp(user: User) {
-        const newUser = await UserModel.create(user)
-        return newUser
+        return await UserModel.create(user)
+    }
+
+    static async update(id: String, user: User) {
+        return await UserModel.findByIdAndUpdate(id, user, { new: true, runValidators: true })
+    }
+
+    static async delete(id: String) {
+        return await UserModel.findByIdAndDelete(id)
     }
 }
 
