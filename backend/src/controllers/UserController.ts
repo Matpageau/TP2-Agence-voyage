@@ -1,14 +1,14 @@
-import { NextFunction, Request, Response } from "express"
-import User from "../models/User"
-import jwt from "jsonwebtoken"
-import createError from "../utils/createError"
+import { NextFunction, Request, Response } from "express";
+import User from "../models/User";
+import jwt from "jsonwebtoken";
+import createError from "../utils/createError";
 
 const UserController = {
     async getAll (_req: Request, res: Response, next: NextFunction) {
         try {
             const users = await User.getAll()
             if (users.length === 0) {
-                return next(createError("No user found in database", 404, "USER_NOT_FOUND" ))
+                return next(createError("No user found in database", 404, "USER_NOT_FOUND"))
             }
             res.status(200).json(users)
         } catch (err) {
@@ -18,7 +18,8 @@ const UserController = {
 
     async getById (req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await User.getById(req.params.id)
+            const userId = req.params.id
+            const user = await User.getById(userId)
             if (!user) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
@@ -30,7 +31,8 @@ const UserController = {
 
     async getByName (req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await User.getByName(req.body.username)
+            const username = req.body.username
+            const user = await User.getByName(username)
             if (!user) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
@@ -66,16 +68,14 @@ const UserController = {
 
     async signUp (req: Request, res: Response, next: NextFunction) {
         try {
-            const user = req.body
-            const err = await User.verify(user)
+            const data = req.body
+            const err = await User.verify(data)
             if (err) {
                 return next(err)
             }
-            if (!user.role) {
-                user.role = "user"
-            }
-            const newUser = await User.signUp(user)
-            res.status(200).json(newUser)
+            data.role ||= "user"
+            const user = await User.signUp(data)
+            res.status(200).json(user)
         } catch (err) {
             next(err)
         }
@@ -83,7 +83,13 @@ const UserController = {
 
     async update(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await User.update(req.params.id, req.body)
+            const userId = req.params.id
+            const data = req.body
+            const err = await User.verify(data)
+            if (err) {
+                return next(err)
+            }
+            const user = await User.update(userId, data)
             if (!user) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
@@ -95,8 +101,12 @@ const UserController = {
 
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await User.delete(req.params.id)
-            res.status(200).json(`User ${user?.username} deleted`)
+            const userId = req.params.userId
+            const user = await User.delete(userId)
+            if (!user) {
+                return next(createError("User not found", 404, "USER_NOT_FOUND"))
+            }
+            res.status(200).json(`User ${user.username} deleted`)
         } catch (err) {
             next(err)
         }

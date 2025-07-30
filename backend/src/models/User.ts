@@ -1,4 +1,4 @@
-import UserModel from "./UserModel"
+import UserModel from "./UserModel";
 import createError from "../utils/createError";
 
 class User {
@@ -21,31 +21,31 @@ class User {
         if (userFound) {
             return createError("Username already exist", 409, "USERNAME_TAKEN")
         }
-        else return null
+        return null
     }
 
-    static async getAll() {
-        return await UserModel.find()
+    static getAll() {
+        return UserModel.find()
     }
 
-    static async getById(id: String) {
-        return await UserModel.findById(id)
+    static getById(id: String) {
+        return UserModel.findById(id)
     }
 
-    static async getByName(name: String) {
-        return await UserModel.findOne({ username: name })
+    static getByName(name: String) {
+        return UserModel.findOne({ username: name })
     }
 
-    static async signUp(user: User) {
-        return await UserModel.create(user)
+    static signUp(user: User) {
+        return UserModel.create(user)
     }
 
-    static async update(id: String, user: User) {
-        return await UserModel.findByIdAndUpdate(id, user, { new: true, runValidators: true })
+    static update(id: String, user: User) {
+        return UserModel.findByIdAndUpdate(id, user, { new: true, runValidators: true })
     }
 
-    static async delete(id: String) {
-        return await UserModel.findByIdAndDelete(id)
+    static delete(id: String) {
+        return UserModel.findByIdAndDelete(id)
     }
 }
 
