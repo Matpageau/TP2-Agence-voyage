@@ -8,5 +8,6 @@ UserRouter.get("/me", UserController.getByToken)
 UserRouter.get("/:userId", UserController.getById)
 UserRouter.put("/:userId", UserController.update)
 UserRouter.delete("/:userId", UserController.delete)
+UserRouter.patch("/:userId", UserController.handleLike)
 
 export default UserRouter

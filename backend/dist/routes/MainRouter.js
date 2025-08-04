@@ -5,9 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const UserRouter_1 = __importDefault(require("./UserRouter"));
+const TravelRouter_1 = __importDefault(require("./TravelRouter"));
 const UserController_1 = __importDefault(require("../controllers/UserController"));
 const MainRouter = express_1.default.Router();
 MainRouter.use("/users", UserRouter_1.default);
+MainRouter.use("/travels", TravelRouter_1.default);
 MainRouter.post("/signup", UserController_1.default.signUp);
 MainRouter.post("/login", UserController_1.default.login);
 exports.default = MainRouter;

@@ -25,5 +25,6 @@ mongoose_1.default.connect(uri)
     console.error("Database connection error:", err);
 });
 app.use("/", MainRouter_1.default);
+app.use((0, cookie_parser_1.default)());
 app.use(errorHandler_1.default);
 app.listen(port);

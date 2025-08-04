@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
+import Travel from "../models/Travel";
 
 const UserController = {
     async getAll (req: Request, res: Response, next: NextFunction) {
@@ -124,8 +125,52 @@ const UserController = {
         } catch (err) {
             next(err)
         }
+    },
+
+    async handleLike(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.userId
+            const { action, travelId } = req.body
+            switch (action) {
+                case 'like':
+                    await like(userId, travelId)
+                    break;
+                case 'dislike':
+                    await dislike(userId, travelId)
+                    break;
+                default:
+                    return next(createError("Invalid requested action", 400, "INVALID_ACTION"))
+            }
+            res.status(200).json()
+        } catch (err) {
+            next(err)
+        }
     }
 }
 
 export default UserController
 
+async function like(userId: string, travelId: string) {
+    let user = await User.getById(userId)
+    if (!user) {
+        return createError("User not found", 404, "USER_NOT_FOUND")
+    }
+    const travel = await Travel.getById(travelId)
+    if (!travel) {
+        throw createError("Travel not found", 404, "TRAVEL_NOT_FOUND")
+    }
+    user.liked.push(travelId)
+    user.save()
+}
+
+async function dislike(userId: string, travelId: string) {
+    let user = await User.getById(userId)
+    if (!user) {
+        throw createError("User not found", 404, "USER_NOT_FOUND")
+    }
+    const index = user.liked.indexOf(travelId)
+    if (index === -1) {
+        throw createError("Invalid travel ID", 404, "INVALID_TRAVEL_ID")
+    }
+    user.liked.splice(index, 1)
+}
