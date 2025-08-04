@@ -49,33 +49,7 @@ onMounted(async () => {
   <main class="flex flex-col">
     <Navbar />
     <div class="flex flex-col flex-grow items-center justify-center text-black">
-      <div class="w-6/8 h-full flex flex-col">
-        <h1 class="font-bold mt-6 text-2xl">{{ t("ourTravels") }}</h1>
-        <div class="flex justify-between mt-3 items-center">
-          <div class="flex">
-            <TextInput v-model="searchValue" :placeholder="t('search')" type="search"/>
-            <select v-model="typeValue" name="type" class="ml-3 h-full text-left pr-10 p-2 border border-gray-300 rounded-md focus:ring focus:ring-black">
-              <option value="all">{{ t('allType') }}</option>
-              <option value="inclusive">{{ t('allInclusive') }}</option>
-              <option value="backpack">{{ t('backpack') }}</option>
-            </select>
-          </div>
-          <div class="flex gap-3">
-            <FilterBtn v-if="userStore.currentUser" @click="filerValue = 'fav'" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
-              {{ t('favorite') }}
-            </FilterBtn>
-            <FilterBtn @click="filerValue = 'asc'" :class="filerValue == 'asc' ? 'bg-[var(--cyan)] text-white' : ''">
-              {{ t('ascPrice') }}
-            </FilterBtn>
-            <FilterBtn @click="filerValue = 'des'" :class="filerValue == 'des' ? 'bg-[var(--cyan)] text-white' : ''">
-              {{ t('desPrice') }}
-            </FilterBtn>
-          </div>
-        </div>
-        <div class="mt-6 flex-grow">
-          <TravelGrid :travel="filteredTravels"/>
-        </div>
-      </div>
+      
     </div>
   </main>
 </template>
