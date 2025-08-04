@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
       type: String,
       default: "user",
       enum: ["user", "manager", "admin"]
+    },
+    liked: {
+      type: [String],
+      default: []
     }
 })
 

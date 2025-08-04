@@ -4,8 +4,9 @@ import UserController from "../controllers/UserController"
 const UserRouter = express.Router()
 
 UserRouter.get("/", UserController.getAll)
-UserRouter.get("/:id", UserController.getById)
-UserRouter.put("/:id", UserController.update)
-UserRouter.delete("/:id", UserController.delete)
+UserRouter.get("/:userId", UserController.getById)
+UserRouter.get("/me", UserController.getByToken)
+UserRouter.put("/:userId", UserController.update)
+UserRouter.delete("/:userId", UserController.delete)
 
 export default UserRouter

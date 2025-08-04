@@ -2,10 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
+import Travel from "../models/Travel";
+import mongoose from "mongoose";
 
 const UserController = {
-    async getAll (_req: Request, res: Response, next: NextFunction) {
+    async getAll (req: Request, res: Response, next: NextFunction) {
         try {
+            const max = req.params.max
             const users = await User.getAll()
             if (users.length === 0) {
                 return next(createError("No user found in database", 404, "USER_NOT_FOUND"))
@@ -42,19 +45,30 @@ const UserController = {
         }
     },
 
+    async getByToken (req: Request, res: Response, next: NextFunction) {
+        try {
+            const token = req.cookies.token
+            if (!token) {
+                return next(createError("User not found", 401, "USER_NOT_FOUND"))
+            }
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string }
+            const user = await User.getById(decoded.id)
+            res.status(200).json(user)
+        } catch (err) {
+            next(err)
+        }
+    },
+
     async login (req: Request, res: Response, next: NextFunction) {
         try {
             const { username, password } = req.body
             const user = await User.getByName(username)
-            
             if (!user) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
-            
             if (user.password !== password) {
                 return next(createError("Invalid password", 401, "INVALID_PASSWORD"))
             }
-
             const payload = { id: user.id }
             const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "24h" })
             res.cookie("token", token, {
@@ -114,3 +128,4 @@ const UserController = {
 }
 
 export default UserController
+
