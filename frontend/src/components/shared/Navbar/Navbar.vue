@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import ShoppingCart from '@/components/icons/ShoppingCart.vue';
-import type { UserData } from '@/types/User';
 import { useI18n } from 'vue-i18n';
+import { useUserStore } from '@/stores/userStore';
 
-const props = defineProps<{
-  user: UserData | null
-}>()
+const userStore = useUserStore()
 
 const { locale, t } = useI18n()
 
@@ -20,12 +18,13 @@ const handleLangChange = (lang: "fr" | "en") => {
     <div class="flex">
       <h1 class="font-bold ml-3">Plan B Voyages</h1>
       <div class="flex ml-20 gap-10">
-        <a href="/" @click="">{{ t('trip') }}</a>
-        <a v-if="props.user?.role == 'admin' " href="/admin" @click="">Admin</a>
+        <a href="/" @click="">{{ t('travel') }}</a>
+        <a v-if="userStore.currentUser?.role == 'admin' " href="/admin" @click="">Admin</a>
       </div>
     </div>
     <div class="flex mr-3 gap-3">
-      <p class="">{{ props.user?.username ?? "Username" }}</p>
+      <a v-if="userStore.currentUser" href="">{{ userStore.currentUser.username }}</a>
+      <a v-else href="/login">{{ "Login" }}</a>
       <div class="flex gap-1">
         <p 
           class="cursor-pointer"

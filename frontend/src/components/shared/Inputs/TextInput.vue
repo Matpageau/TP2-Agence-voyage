@@ -24,6 +24,7 @@ const emit = defineEmits<{
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
     <span
+      v-if="error"
       class="text-red-600 text-sm mt-1 min-h-[1.25rem]" 
       aria-live="polite"
     >

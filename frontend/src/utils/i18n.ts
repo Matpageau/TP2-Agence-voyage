@@ -2,7 +2,7 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   fr: {
-    trip: "Voyages",
+    travel: "Voyages",
     admin: "Admin",
     username: "Nom d'utilisateur",
     password: "Mot de passe",
@@ -13,14 +13,20 @@ const messages = {
     invalidPassword: "Le mot de passe est incorrecte",
     usernameAlreadyTaken: "Nom d'utilisateur invalide",
     passwordNotMatch: "Les mots de passe ne correspondent pas",
-    ourTrips: "Nos voyages",
+    ourTravels: "Nos voyages",
     inclusive: "Tout inclus",
     pois: "aucun point d'intérêt | point d'intérêt | points d'intérêt",
     days: "{count} jour | {count} jour | {count} jours",
     book: "Réserver",
+    search: "Rechercher",
+    allInclusive: "Tout inclus",
+    allType: "Tout",
+    favorite: "Favoris",
+    ascPrice: "Prix Asc.",
+    desPrice: "Prix Des.",
   },
   en: {
-    trip: "Trips",
+    travel: "Travels",
     admin: "Admin",
     username: "Username",
     password: "Password",
@@ -31,11 +37,17 @@ const messages = {
     invalidPassword: "Invalid password",
     usernameAlreadyTaken: "This username is already taken",
     passwordNotMatch: "Password does not match",
-    ourTrips: "Our trips",
+    ourTravels: "Our travels",
     inclusive: "All inclusive",
     pois: "np point of interest | point of interest | points of interest",
     days: "{count} day | {count} day | {count} days",
     book: "Book",
+    search: "Search",
+    allInclusive: "All inclusive",
+    allType: "All",
+    favorite: "Favorite",
+    ascPrice: "Asc. price",
+    desPrice: "Des. price",
   }
 }
 

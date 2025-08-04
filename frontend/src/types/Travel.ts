@@ -1,4 +1,4 @@
-export interface TripData {
+export interface TravelData {
   _id: string
   title: string
   description: string
