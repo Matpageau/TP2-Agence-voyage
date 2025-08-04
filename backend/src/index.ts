@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import MainRouter from "./routes/MainRouter"
 import errorHandler from "./middleware/errorHandler"
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 const port = 3000
@@ -24,6 +25,7 @@ mongoose.connect(uri)
 })
 
 app.use("/", MainRouter)
+app.use(cookieParser())
 app.use(errorHandler)
 
 app.listen(port)
