@@ -86,7 +86,7 @@ const handleRegister = async () => {
             />
           </div>
           <div class="flex justify-center w-full mt-30">
-            <BoldButton class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)]" @click="handleLogin" :disabled="!loginUsername || !loginPassword">
+            <BoldButton class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] disabled:bg-[var(--cyan)]/50" @click="handleLogin" :disabled="!loginUsername || !loginPassword">
               {{ t("login") }}
             </BoldButton>
           </div>
@@ -113,7 +113,7 @@ const handleRegister = async () => {
             />
           </div>
           <div class="flex justify-center w-full mt-12">
-            <BoldButton class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)]" @click="handleRegister" :disabled="!registerUsername || !registerPassword || !registerPasswordConfirm">
+            <BoldButton class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] disabled:bg-[var(--cyan)]/50" @click="handleRegister" :disabled="!registerUsername || !registerPassword || !registerPasswordConfirm">
               {{ t("register")}}
             </BoldButton>
           </div>

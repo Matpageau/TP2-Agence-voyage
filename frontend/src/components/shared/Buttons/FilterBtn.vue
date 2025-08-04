@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
   <button 
-    class="cursor-pointer py-2 px-10 rounded-xl font-bold text-lg transition-colors disabled:cursor-not-allowed"
+    class="cursor-pointer px-5 rounded-full border border-neutral-300 transition-colors disabled:cursor-not-allowed"
     @click="emit('click')"
     :disabled="props.disabled ?? false"
   >
