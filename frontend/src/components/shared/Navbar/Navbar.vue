@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ShoppingCart from '@/components/icons/ShoppingCart.vue';
-import type { UserData } from '@/types/User';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/userStore';
 

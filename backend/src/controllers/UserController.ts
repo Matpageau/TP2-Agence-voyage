@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
-import Travel from "../models/Travel";
-import mongoose from "mongoose";
 
 const UserController = {
     async getAll (req: Request, res: Response, next: NextFunction) {
@@ -46,12 +44,14 @@ const UserController = {
     },
 
     async getByToken (req: Request, res: Response, next: NextFunction) {
-        try {
+        try {            
             const token = req.cookies.token
+
             if (!token) {
-                return next(createError("User not found", 401, "USER_NOT_FOUND"))
+                return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string }
+            
             const user = await User.getById(decoded.id)
             res.status(200).json(user)
         } catch (err) {

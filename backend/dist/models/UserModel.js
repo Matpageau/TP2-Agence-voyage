@@ -17,6 +17,10 @@ const UserSchema = new mongoose_1.default.Schema({
         type: String,
         default: "user",
         enum: ["user", "manager", "admin"]
+    },
+    liked: {
+        type: [String],
+        default: []
     }
 });
 const UserModel = mongoose_1.default.model("users", UserSchema);

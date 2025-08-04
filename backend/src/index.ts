@@ -14,6 +14,7 @@ app.use(cors({
   credentials: true
 }))
 
+app.use(cookieParser())
 app.use(express.json())
 
 const uri = process.env.CONNECTION_STRING!
@@ -25,7 +26,6 @@ mongoose.connect(uri)
 })
 
 app.use("/", MainRouter)
-app.use(cookieParser())
 app.use(errorHandler)
 
 app.listen(port)
