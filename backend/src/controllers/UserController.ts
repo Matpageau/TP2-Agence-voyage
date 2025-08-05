@@ -151,16 +151,22 @@ const UserController = {
 export default UserController
 
 async function like(userId: string, travelId: string) {
-    let user = await User.getById(userId)
+    const [user, travel] = await Promise.all([
+        User.getById(userId),
+        Travel.getById(travelId)
+    ])
     if (!user) {
         return createError("User not found", 404, "USER_NOT_FOUND")
     }
-    const travel = await Travel.getById(travelId)
+    
     if (!travel) {
         throw createError("Travel not found", 404, "TRAVEL_NOT_FOUND")
     }
-    user.liked.push(travelId)
-    user.save()
+    
+    if(!user.liked.includes(travelId)) {
+      user.liked.push(travelId)
+      await user.save()
+    }
 }
 
 async function dislike(userId: string, travelId: string) {
@@ -169,8 +175,8 @@ async function dislike(userId: string, travelId: string) {
         throw createError("User not found", 404, "USER_NOT_FOUND")
     }
     const index = user.liked.indexOf(travelId)
-    if (index === -1) {
-        throw createError("Invalid travel ID", 404, "INVALID_TRAVEL_ID")
+    if (index !== -1) {
+        user.liked.splice(index, 1)
+        await user.save()
     }
-    user.liked.splice(index, 1)
 }

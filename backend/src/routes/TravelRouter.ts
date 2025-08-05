@@ -4,8 +4,8 @@ import TravelController from "../controllers/TravelController";
 const TravelRouter = express.Router()
 
 TravelRouter.get("/", TravelController.getAll)
-TravelRouter.get("/:travelId", TravelController.getById)
 TravelRouter.post("/", TravelController.create)
+TravelRouter.get("/:travelId", TravelController.getById)
 TravelRouter.put("/:travelId", TravelController.update)
 TravelRouter.delete("/:travelId", TravelController.delete)
 
