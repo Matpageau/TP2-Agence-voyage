@@ -157,10 +157,6 @@ async function like(userId: string, travelId: string) {
         User.getById(userId),
         Travel.getById(travelId)
     ])
-    const [user, travel] = await Promise.all([
-        User.getById(userId),
-        Travel.getById(travelId)
-    ])
     if (!user) {
         throw createError("User not found", 404, "USER_NOT_FOUND")
     }
