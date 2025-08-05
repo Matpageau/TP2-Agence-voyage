@@ -7,8 +7,11 @@ import Travel from "../models/Travel";
 const UserController = {
     async getAll (req: Request, res: Response, next: NextFunction) {
         try {
-            const max = req.params.max
-            const users = await User.getAll()
+            const limit = Number(req.query.limit)
+            if (limit && isNaN(limit)) {
+                return next(createError("Invalid limit requested", 400, "INVALID_LIMIT"))
+            }
+            const users = await User.getAll(limit)
             if (users.length === 0) {
                 return next(createError("No user found in database", 404, "USER_NOT_FOUND"))
             }
@@ -20,7 +23,7 @@ const UserController = {
 
     async getById (req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = req.params.id
+            const userId = req.params.userId
             const user = await User.getById(userId)
             if (!user) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
@@ -47,12 +50,10 @@ const UserController = {
     async getByToken (req: Request, res: Response, next: NextFunction) {
         try {            
             const token = req.cookies.token
-
             if (!token) {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string }
-            
             const user = await User.getById(decoded.id)
             res.status(200).json(user)
         } catch (err) {
@@ -98,7 +99,7 @@ const UserController = {
 
     async update(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = req.params.id
+            const userId = req.params.userId
             const data = req.body
             const err = await User.verify(data)
             if (err) {
@@ -131,46 +132,53 @@ const UserController = {
         try {
             const userId = req.params.userId
             const { action, travelId } = req.body
+            let actionMessage = ""
             switch (action) {
                 case 'like':
                     await like(userId, travelId)
+                    actionMessage = "added to"
                     break;
                 case 'dislike':
                     await dislike(userId, travelId)
+                    actionMessage = "deleted from"
                     break;
                 default:
                     return next(createError("Invalid requested action", 400, "INVALID_ACTION"))
             }
-            res.status(200).json()
+            res.status(200).json(`Travel ${actionMessage} 'Liked'`)
         } catch (err) {
             next(err)
         }
     }
 }
 
-export default UserController
-
 async function like(userId: string, travelId: string) {
-    let user = await User.getById(userId)
+    const [user, travel] = await Promise.all([
+        User.getById(userId),
+        Travel.getById(travelId)
+    ])
     if (!user) {
-        return createError("User not found", 404, "USER_NOT_FOUND")
+        throw createError("User not found", 404, "USER_NOT_FOUND")
     }
-    const travel = await Travel.getById(travelId)
     if (!travel) {
         throw createError("Travel not found", 404, "TRAVEL_NOT_FOUND")
     }
-    user.liked.push(travelId)
-    user.save()
+    if (!user.liked.includes(travelId)) {
+        user.liked.push(travelId)
+        await user.save()
+    }
 }
 
 async function dislike(userId: string, travelId: string) {
-    let user = await User.getById(userId)
+    const user = await User.getById(userId)
     if (!user) {
         throw createError("User not found", 404, "USER_NOT_FOUND")
     }
     const index = user.liked.indexOf(travelId)
-    if (index === -1) {
-        throw createError("Invalid travel ID", 404, "INVALID_TRAVEL_ID")
+    if (index !== -1) {
+        user.liked.splice(index, 1)
+        await user.save()
     }
-    user.liked.splice(index, 1)
 }
+
+export default UserController
