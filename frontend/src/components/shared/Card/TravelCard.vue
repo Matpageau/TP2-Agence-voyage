@@ -6,7 +6,7 @@ import BoldButton from '../Buttons/BoldButton.vue';
 import Heart from '@/components/icons/Heart.vue';
 import axios from 'axios';
 import { useUserStore } from '@/stores/userStore';
-import { ref } from 'vue';
+import { computed } from 'vue';
 
 const userStore = useUserStore()
 const { locale, t, n } = useI18n()
@@ -15,23 +15,20 @@ const props = defineProps<{
   travel: TravelData
 }>()
 
-const isLiked = ref(userStore.currentUser?.liked.includes(props.travel._id))
+const isLiked = computed(() =>
+  userStore.currentUser?.liked.includes(props.travel._id) ?? false
+)
 
-const handleLikeButton = async () => {
+const handleLikeButton = async () => {  
   try {
-    if(isLiked.value) {
-      await axios.patch(`http://localhost:3000/users/${userStore.currentUser?._id}`, {
-        action: "dislike",
-        travelId: props.travel._id
-      })
-      isLiked.value = false
-    }else{
-      await axios.patch(`http://localhost:3000/users/${userStore.currentUser?._id}`, {
-        action: "like",
-        travelId: props.travel._id
-      })
-      isLiked.value = true
-    }
+    const action = isLiked.value ? 'dislike' : 'like'
+    await axios.patch(`http://localhost:3000/users/${userStore.currentUser?._id}`, {
+      action,
+      travelId: props.travel._id
+    })
+
+    await userStore.fetchUser(true)
+    
   } catch (error) {
     console.error(error)
   }
@@ -69,9 +66,20 @@ const tavelDurationInDays = DateTime
           <h1 class="text-3xl font-bold text-[var(--cyan)]">{{ n(props.travel.price, 'currency') }}</h1>
           <div class="flex h-fit">
             <div class="h-full w-[44px]">
-              <Heart v-if="userStore.currentUser" class="h-full aspect-square cursor-pointer" :onclick="(() => handleLikeButton)" :class="[isLiked ? 'fill-red-600' : '', 'transition-colors']"/>
+              <Heart v-if="userStore.currentUser" class="h-full aspect-square cursor-pointer" :onclick="handleLikeButton" :class="[isLiked ? 'fill-red-600 stroke-1 stroke-red-600' : '', 'transition-colors']"/>
             </div>
-            <BoldButton class="bg-[var(--orange)] hover:bg-[var(--orange_hover)]" @click="null">
+            <BoldButton
+              v-if="userStore.currentUser?.role == 'admin'"
+              class="bg-[var(--orange)] hover:bg-[var(--orange_hover)]"
+              :href="`/admin/travel/${travel._id}`"
+            >
+              {{ t("edit") }}
+            </BoldButton>
+            <BoldButton
+              v-else
+              class="bg-[var(--orange)] hover:bg-[var(--orange_hover)]"
+              @click="null"
+            >
               {{ t("book") }}
             </BoldButton>
           </div>

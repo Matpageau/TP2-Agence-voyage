@@ -39,9 +39,17 @@ const filteredTravels = computed(() => {
 })
 
 onMounted(async () => {
-  const resTravel = await axios.get(`http://localhost:3000/travel`)
+  const resTravel = await axios.get(`http://localhost:3000/travels`)
   travels.value = resTravel.data
 })
+
+const setFilterValue = (val: string) => {
+  if(filerValue.value == val) {
+    filerValue.value = ""
+  }else{
+    filerValue.value = val
+  } 
+}
 
 </script>
 
@@ -61,13 +69,13 @@ onMounted(async () => {
             </select>
           </div>
           <div class="flex gap-3">
-            <FilterBtn v-if="userStore.currentUser" @click="filerValue = 'fav'" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
+            <FilterBtn v-if="userStore.currentUser" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('favorite') }}
             </FilterBtn>
-            <FilterBtn @click="filerValue = 'asc'" :class="filerValue == 'asc' ? 'bg-[var(--cyan)] text-white' : ''">
+            <FilterBtn @click="setFilterValue('asc')" :class="filerValue == 'asc' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('ascPrice') }}
             </FilterBtn>
-            <FilterBtn @click="filerValue = 'des'" :class="filerValue == 'des' ? 'bg-[var(--cyan)] text-white' : ''">
+            <FilterBtn @click="setFilterValue('des')" :class="filerValue == 'des' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('desPrice') }}
             </FilterBtn>
           </div>

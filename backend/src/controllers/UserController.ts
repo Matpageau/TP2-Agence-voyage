@@ -163,9 +163,10 @@ async function like(userId: string, travelId: string) {
     if (!travel) {
         throw createError("Travel not found", 404, "TRAVEL_NOT_FOUND")
     }
-    if (!user.liked.includes(travelId)) {
-        user.liked.push(travelId)
-        await user.save()
+    
+    if(!user.liked.includes(travelId)) {
+      user.liked.push(travelId)
+      await user.save()
     }
 }
 

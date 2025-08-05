@@ -8,8 +8,8 @@ export const useUserStore = defineStore('user', () => {
   const isFetching = ref(false)
   let fetchPromise: Promise<void> | null = null
 
-  const fetchUser = async () => {    
-    if (currentUser.value) return
+  const fetchUser = async (force = false) => {    
+    if (!force && currentUser.value) return
     if (isFetching.value && fetchPromise) return fetchPromise
 
     isFetching.value = true

@@ -20,10 +20,12 @@ const messages = {
     book: "Réserver",
     search: "Rechercher",
     allInclusive: "Tout inclus",
+    backpack: "Sac à dos",
     allType: "Tout",
     favorite: "Favoris",
     ascPrice: "Prix Asc.",
     desPrice: "Prix Des.",
+    edit: "Modifier"
   },
   en: {
     travel: "Travels",
@@ -44,10 +46,12 @@ const messages = {
     book: "Book",
     search: "Search",
     allInclusive: "All inclusive",
+    backpack: "Backpack",
     allType: "All",
     favorite: "Favorite",
     ascPrice: "Asc. price",
     desPrice: "Des. price",
+    edit: "Edit"
   }
 }
 
