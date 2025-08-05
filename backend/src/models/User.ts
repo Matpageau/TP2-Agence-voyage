@@ -28,8 +28,8 @@ class User {
         return null
     }
 
-    static getAll() {
-        return UserModel.find()
+    static getAll(max: number | 0) {
+        return UserModel.find().limit(max)
     }
 
     static getById(id: string) {
