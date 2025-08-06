@@ -26,17 +26,17 @@ class Travel {
         if (this.verifyString(travel.description)) {
             return (0, createError_1.default)("Invalid description", 409, "INVALID_DESCRIPTION");
         }
+        if (this.verifyString(travel.type)) {
+            return (0, createError_1.default)("Invalid type", 409, "INVALID_TYPE");
+        }
         if (this.verifyString(travel.destination)) {
             return (0, createError_1.default)("Invalid destination", 409, "INVALID_DESTINATION");
         }
-        if (this.verifyNumber(travel.price)) {
-            return (0, createError_1.default)("Invalid price", 409, "INVALID_PRICE");
-        }
-        if (this.verifyString(travel.img_url)) {
-            return (0, createError_1.default)("Invalid image URL", 409, "INVALID_URL");
-        }
         if (this.verifyNumber(travel.poi)) {
             return (0, createError_1.default)("Invalid POI", 409, "INVALID_POI");
+        }
+        if (this.verifyNumber(travel.price)) {
+            return (0, createError_1.default)("Invalid price", 409, "INVALID_PRICE");
         }
         if (this.verifyString(travel.departure_date)) {
             return (0, createError_1.default)("Invalid departure date", 409, "INVALID_DEP_DATE");
@@ -44,8 +44,8 @@ class Travel {
         if (this.verifyString(travel.arrival_date)) {
             return (0, createError_1.default)("Invalid arrival date", 409, "INVALID_ARR_DATE");
         }
-        if (this.verifyString(travel.type)) {
-            return (0, createError_1.default)("Invalid type", 409, "INVALID_TYPE");
+        if (this.verifyString(travel.img_url)) {
+            return (0, createError_1.default)("Invalid image URL", 409, "INVALID_URL");
         }
     }
     static verifyString(str) {

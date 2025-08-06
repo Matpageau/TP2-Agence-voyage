@@ -5,4 +5,5 @@ export interface UserData {
   username: string
   role: "user" | "manager" | "admin"
   liked: string[]
+  createdAt: string
 }
