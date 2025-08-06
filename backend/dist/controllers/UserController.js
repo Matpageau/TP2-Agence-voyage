@@ -10,11 +10,16 @@ const Travel_1 = __importDefault(require("../models/Travel"));
 const UserController = {
     async getAll(req, res, next) {
         try {
-            const limit = Number(req.query.limit);
-            if (limit && isNaN(limit)) {
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
+            if ((isNaN(page) || page < 1)) {
+                return next((0, createError_1.default)("Invalid page requested", 400, "INVALID_PAGE"));
+            }
+            if ((isNaN(limit) || limit < 0 || limit > 50)) {
                 return next((0, createError_1.default)("Invalid limit requested", 400, "INVALID_LIMIT"));
             }
-            const users = await User_1.default.getAll(limit);
+            const skip = (page - 1) * limit;
+            const users = await User_1.default.getAll(skip, limit);
             if (users.length === 0) {
                 return next((0, createError_1.default)("No user found in database", 404, "USER_NOT_FOUND"));
             }
@@ -54,10 +59,16 @@ const UserController = {
         try {
             const token = req.cookies.token;
             if (!token) {
-                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+                return next((0, createError_1.default)("Token is missing", 401, "TOKEN_MISSING"));
             }
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+            if (!decoded?.id || typeof decoded.id !== "string") {
+                return next((0, createError_1.default)("Invalid token", 401, "INVALID_TOKEN"));
+            }
             const user = await User_1.default.getById(decoded.id);
+            if (!user) {
+                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+            }
             res.status(200).json(user);
         }
         catch (err) {

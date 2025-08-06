@@ -25,23 +25,15 @@ const TravelSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
-    poi_ids: {
-        type: [String],
+    poi: {
+        type: Number,
         required: true
     },
     departure_date: {
-        type: Date,
-        required: true
-    },
-    arrival_date: {
-        type: Date,
-        required: true
-    },
-    departure_city: {
         type: String,
         required: true
     },
-    arrival_city: {
+    arrival_date: {
         type: String,
         required: true
     },

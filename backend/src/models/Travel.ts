@@ -9,11 +9,9 @@ class Travel {
     destination: string;
     price: number;
     img_url: string;
-    poi_ids: string[];
-    departure_date: Date;
-    arrival_date: Date;
-    departure_city: string;
-    arrival_city: string;
+    poi: number;
+    departure_date: string;
+    arrival_date: string;
     type: string;
 
     constructor(travel: Travel) {
@@ -23,26 +21,35 @@ class Travel {
         this.destination = travel.destination
         this.price = travel.price
         this.img_url = travel.img_url
-        this.poi_ids = travel.poi_ids
+        this.poi = travel.poi
         this.departure_date = travel.departure_date
         this.arrival_date = travel.arrival_date
-        this.departure_city = travel.departure_city
-        this.arrival_city = travel.arrival_city
         this.type = travel.type
     }
 
     static verify(travel: Travel) {
-        if (!travel.title) {return createError("Invalid title", 409, "INVALID_TITLE")}
-        if (!travel.description) {return createError("Invalid description", 409, "INVALID_DESCRIPTION")}
-        if (!travel.destination) {return createError("Invalid destination", 409, "INVALID_DESTINATION")}
-        if (isNaN(travel.price)) {return createError("Invalid price", 409, "INVALID_PRICE")}
-        if (!travel.img_url) {return createError("Invalid image URL", 409, "INVALID_URL")}
-        if (!Array.isArray(travel.poi_ids)) {return createError("Invalid POI ID", 409, "INVALID_POI")}
-        if (!travel.departure_date) {return createError("Invalid departure_date", 409, "INVALID_DEP_DATE")}
-        if (!travel.arrival_date) {return createError("Invalid arrival_date", 409, "INVALID_ARR_DATE")}
-        if (!travel.departure_city) {return createError("Invalid departure_city", 409, "INVALID_DEP_CITY")}
-        if (!travel.arrival_city) {return createError("Invalid arrival_city", 409, "INVALID_ARR_CITY")}
-        if (!travel.type) {return createError("Invalid type", 409, "INVALID_TYPE")}
+        if (this.verifyString(travel.title)) {return createError("Invalid title", 409, "INVALID_TITLE")}
+        if (this.verifyString(travel.description)) {return createError("Invalid description", 409, "INVALID_DESCRIPTION")}
+        if (this.verifyString(travel.destination)) {return createError("Invalid destination", 409, "INVALID_DESTINATION")}
+        if (this.verifyNumber(travel.price)) {return createError("Invalid price", 409, "INVALID_PRICE")}
+        if (this.verifyString(travel.img_url)) {return createError("Invalid image URL", 409, "INVALID_URL")}
+        if (this.verifyNumber(travel.poi)) {return createError("Invalid POI", 409, "INVALID_POI")}
+        if (this.verifyString(travel.departure_date)) {return createError("Invalid departure date", 409, "INVALID_DEP_DATE")}
+        if (this.verifyString(travel.arrival_date)) {return createError("Invalid arrival date", 409, "INVALID_ARR_DATE")}
+        if (this.verifyString(travel.type)) {return createError("Invalid type", 409, "INVALID_TYPE")}
+    }
+
+    static verifyString(str: string) {
+        return !str || typeof str !== 'string'
+    }
+
+    static verifyNumber(num: number) {
+        return isNaN(num) || num <= 0
+    }
+
+    static verifyDate(date: Date) {
+        if (!date) return false
+
     }
 
     static GetAll() {

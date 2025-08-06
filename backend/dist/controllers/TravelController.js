@@ -23,7 +23,7 @@ const TravelController = {
             const travelId = req.params.travelId;
             const travel = await Travel_1.default.getById(travelId);
             if (!travel) {
-                return next((0, createError_1.default)("travel not found", 404, "TRAVEL_NOT_FOUND"));
+                return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
             }
             res.status(200).json(travel);
         }
@@ -62,8 +62,14 @@ const TravelController = {
         try {
             const travelId = req.params.travelId;
             const data = req.body;
-            // TODO
+            const err = Travel_1.default.verify(data);
+            if (err) {
+                return next(err);
+            }
             const travel = await Travel_1.default.update(travelId, data);
+            if (!travel) {
+                return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
+            }
             res.status(200).json(travel);
         }
         catch (err) {
@@ -77,7 +83,7 @@ const TravelController = {
             if (!deletedtravel) {
                 return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
             }
-            res.status(200).json(`Travel '${deletedtravel.destination}' deleted`);
+            res.status(200).json(`Travel '${deletedtravel.title}' deleted`);
         }
         catch (err) {
             next(err);

@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "app": "npm run build && npm run start",
     "watch": "tsc --watch"
   },
   "dependencies": {
