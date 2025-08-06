@@ -27,6 +27,10 @@ const messages = {
     desPrice: "Prix Des.",
     edit: "Modifier",
     create: "Ajouter",
+    cancel: 'Annuler',
+    save: 'Sauvegarder',
+    yes: "Oui",
+    no: "Non",
   },
   en: {
     travel: "Travels",
@@ -54,6 +58,10 @@ const messages = {
     desPrice: "Des. price",
     edit: "Edit",
     create: "Create",
+    cancel: 'Cancel',
+    save: 'Save',
+    yes: "Yes",
+    no: "No",
   }
 }
 
