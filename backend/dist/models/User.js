@@ -30,8 +30,8 @@ class User {
         }
         return null;
     }
-    static getAll(skip, limit) {
-        return UserModel_1.default.find().skip(skip).limit(limit);
+    static getAll() {
+        return UserModel_1.default.find();
     }
     static getById(id) {
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {

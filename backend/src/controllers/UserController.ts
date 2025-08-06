@@ -8,20 +8,7 @@ import { Role, validRole } from "../types/Role";
 const UserController = {
     async getAll (req: Request, res: Response, next: NextFunction) {
         try {
-            const page = Number(req.query.page) || 1
-            const limit = Number(req.query.limit) || 10
-
-            if ((isNaN(page) || page < 1)) {
-                return next(createError("Invalid page requested", 400, "INVALID_PAGE"))
-            }
-
-            if ((isNaN(limit) || limit < 0 || limit > 50)) {
-                return next(createError("Invalid limit requested", 400, "INVALID_LIMIT"))
-            }
-
-            const skip = (page - 1) * limit
-
-            const users = await User.getAll(skip, limit)
+            const users = await User.getAll()
             if (users.length === 0) {
                 return next(createError("No user found in database", 404, "USER_NOT_FOUND"))
             }
