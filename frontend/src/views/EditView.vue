@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import BaseModal from '@/components/Modal/BaseModal.vue';
+import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelCard from '@/components/shared/Card/TravelCard.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
+import router from '@/router';
 import type { TravelData } from '@/types/Travel';
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
@@ -9,6 +12,9 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 const { t } = useI18n()
+
+const isModalOpen = ref(false)
+const errorMsg = ref()
 
 const title = ref("")
 const description = ref("")
@@ -19,7 +25,6 @@ const price = ref<number>(0)
 const departure_date = ref("")
 const arrival_date = ref("")
 const imageUrl = ref("")
-
 
 const route = useRoute()
 const travelId = route.params.travelId as string
@@ -35,6 +40,27 @@ const travel = computed<TravelData>(() => ({
   type: type.value,
   img_url: imageUrl.value
 }))
+
+const handleSave = async () => {
+  try {
+    if(travelId) {
+      const resSave = await axios.patch(`http://localhost:3000/travels/${travelId}`)
+  
+      if(resSave.data) {
+        router.push('/')
+      }
+    }else {
+      const resSave = await axios.post(`http://localhost:3000/travels`)
+
+      if(resSave.data) {
+        router.push('/')
+      }
+    }
+  } catch (error: any) {
+    errorMsg.value = error.response.data.code || "UNKNOWN_ERROR"
+    console.error(error)
+  }
+}
 
 onMounted(async () => {
   if(travelId) {
@@ -59,14 +85,29 @@ onMounted(async () => {
 
 <template>
   <main class="flex flex-col">
+    <BaseModal 
+      v-if="isModalOpen"
+      class="text-black"
+      @close="isModalOpen = false"
+    >
+      <b>Annuler les changements ?</b>
+      <div class="flex justify-center mt-6">
+        <FilterBtn @click="router.push('/')" class="text-white bg-[var(--rouge)] hover:bg-[var(--rouge_hover)]">{{ t('yes') }}</FilterBtn>
+        <FilterBtn @click="isModalOpen = false" class="ml-3 text-white bg-[var(--cyan)] hover:bg-[var(--cyan_hover)]">{{ t('no') }}</FilterBtn>
+      </div>
+    </BaseModal>
     <Navbar />
     <div class="flex flex-col flex-grow items-center justify-center text-black">
-      <div class="flex w-full mt-10">
-        <div class="flex justify-center w-2/3">
-          <form action="" class="flex flex-col gap-3 w-2/3">
+      <div class="flex w-full mt-10 px-50">
+        <div class="flex flex-col items-end w-2/3">
+          <form action="" class="flex flex-col gap-3 w-full">
             <div>
               <label for="tle">Titre</label>
-              <TextInput id="tle" v-model="title" type="text"/>
+              <TextInput 
+                id="tle" v-model="title" 
+                type="text"
+                :error="errorMsg === 'INVALID_TITLE' ? t('INVALID_TITLE') : ''"
+              />
             </div>
             <div class="flex flex-col">
               <label for="desc">Description</label>
@@ -106,10 +147,14 @@ onMounted(async () => {
               <TextInput id="iUrl" v-model="imageUrl" type="text"/>
             </div>
           </form>
+          <div class="w-fit mt-6">
+            <FilterBtn @click="isModalOpen = true" class="ml-3 bg-[var(--rouge)] hover:bg-[var(--rouge_hover)] text-white">{{ t('cancel') }}</FilterBtn>
+            <FilterBtn @click="handleSave" class="ml-3 bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] text-white">{{ t('save') }}</FilterBtn>
+          </div>
         </div>
-        <div class="flex w-1/2 justify-center">
-          <div class="w-1/2 min-w-[400px]">
-            <TravelCard 
+        <div class="flex w-1/3 justify-end">
+          <div class="w-1/3 min-w-[400px]">
+            <TravelCard
               :travel="travel"
             />
           </div>

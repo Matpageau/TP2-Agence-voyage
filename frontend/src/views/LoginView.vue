@@ -6,6 +6,9 @@ import axios from "axios"
 import router from '@/router';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore()
 
 const loginUsername = ref("")
 const loginPassword = ref("")
@@ -32,10 +35,12 @@ const handleLogin = async () => {
     const res = await axios.post(`http://localhost:3000/login`, payload, {withCredentials: true})
     
     if(res.data) {
+      await userStore.fetchUser(true)
       router.push("/")
     }
   } catch (err: any) {
     error.value = err.response.data.code || "UNKNOWN_ERROR"
+    console.error(error)
   }
 }
 
@@ -60,6 +65,7 @@ const handleRegister = async () => {
     }
   } catch (err: any) {
     error.value = err.response.data.code || "UNKNOWN_ERROR"
+    console.error(error)
   }
 }
 
