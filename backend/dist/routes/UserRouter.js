@@ -12,4 +12,5 @@ UserRouter.get("/:userId", UserController_1.default.getById);
 UserRouter.put("/:userId", UserController_1.default.update);
 UserRouter.delete("/:userId", UserController_1.default.delete);
 UserRouter.patch("/:userId", UserController_1.default.handleLike);
+UserRouter.patch("/role/:userId", UserController_1.default.modifyRole);
 exports.default = UserRouter;

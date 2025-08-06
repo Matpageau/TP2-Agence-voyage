@@ -7,6 +7,7 @@ const User_1 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createError_1 = __importDefault(require("../utils/createError"));
 const Travel_1 = __importDefault(require("../models/Travel"));
+const Role_1 = require("../types/Role");
 const UserController = {
     async getAll(req, res, next) {
         try {
@@ -124,6 +125,25 @@ const UserController = {
                 return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
             }
             res.status(200).json(user);
+        }
+        catch (err) {
+            next(err);
+        }
+    },
+    async modifyRole(req, res, next) {
+        try {
+            const userId = req.params.userId;
+            const { role } = req.body;
+            if (!Role_1.validRole.includes(role)) {
+                return next((0, createError_1.default)("Invalid role", 401, "INVALID_ROLE"));
+            }
+            const user = await User_1.default.getById(userId);
+            if (!user) {
+                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+            }
+            user.role = role;
+            await user.save();
+            res.status(200).json(`${user.username} role changed to ${user.role}`);
         }
         catch (err) {
             next(err);

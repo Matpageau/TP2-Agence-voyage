@@ -3,6 +3,7 @@ import User from "../models/User";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
 import Travel from "../models/Travel";
+import { Role, validRole } from "../types/Role";
 
 const UserController = {
     async getAll (req: Request, res: Response, next: NextFunction) {
@@ -144,6 +145,29 @@ const UserController = {
             }
 
             res.status(200).json(user)
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    async modifyRole(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.userId
+            const { role } = req.body
+
+            if (!validRole.includes(role)) {
+                return next(createError("Invalid role", 401, "INVALID_ROLE"))
+            }
+
+            const user = await User.getById(userId)
+            if (!user) {
+                return next(createError("User not found", 404, "USER_NOT_FOUND"))
+            }
+
+            user.role = role
+            await user.save()
+
+            res.status(200).json(`${user.username} role changed to ${user.role}`)
         } catch (err) {
             next(err)
         }

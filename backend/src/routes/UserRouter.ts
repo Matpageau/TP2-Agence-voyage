@@ -9,5 +9,6 @@ UserRouter.get("/:userId", UserController.getById)
 UserRouter.put("/:userId", UserController.update)
 UserRouter.delete("/:userId", UserController.delete)
 UserRouter.patch("/:userId", UserController.handleLike)
+UserRouter.patch("/role/:userId", UserController.modifyRole)
 
 export default UserRouter
