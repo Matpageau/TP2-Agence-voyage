@@ -22,9 +22,9 @@ const handleDeleteUser = async () => {
   }
 }
 
-const handleRoleChange = async (role: string) => {
+const handleRoleChange = async (role: string) => {  
   try {
-    await axios.patch(`http://localhost:3000/users/role/${props.user._id}`, role)
+    await axios.patch(`http://localhost:3000/users/role/${props.user._id}`, {role: role})
   } catch (error) {
     console.error(error)
   }
@@ -32,8 +32,8 @@ const handleRoleChange = async (role: string) => {
 
 const role = ref<'user' | 'manager' | 'admin'>(props.user.role || 'user')
 
-watch([role.value], () => {
-  handleRoleChange(role.value)
+watch(role, (newRole) => {  
+  handleRoleChange(newRole)
 })
 
 </script>

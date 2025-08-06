@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
+import { createRouter, createWebHistory, type NavigationGuardNext } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AdminView from '@/views/AdminView.vue'
@@ -12,7 +12,7 @@ const requireAdmin = async (to: any, from: any, next: NavigationGuardNext) => {
   }
 
   if (userStore.currentUser?.role == 'user') {
-    return next({ name: 'login' })
+    return next({ name: 'home' })
   }
 
   next()
