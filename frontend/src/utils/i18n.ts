@@ -25,7 +25,8 @@ const messages = {
     favorite: "Favoris",
     ascPrice: "Prix Asc.",
     desPrice: "Prix Des.",
-    edit: "Modifier"
+    edit: "Modifier",
+    create: "Ajouter",
   },
   en: {
     travel: "Travels",
@@ -51,7 +52,8 @@ const messages = {
     favorite: "Favorite",
     ascPrice: "Asc. price",
     desPrice: "Des. price",
-    edit: "Edit"
+    edit: "Edit",
+    create: "Create",
   }
 }
 

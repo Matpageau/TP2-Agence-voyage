@@ -13,7 +13,7 @@ const props = defineProps<{
   <component
     :is="props.href ? 'a' : 'button'"
     :href="props.href"
-    class="cursor-pointer py-2 px-10 rounded-xl font-bold text-lg transition-colors disabled:cursor-not-allowed"
+    class="cursor-pointer py-2 px-10 rounded-xl font-bold text-center text-lg transition-colors disabled:cursor-not-allowed"
     @click="emit('click')"
     :disabled="props.disabled ?? false"
   >

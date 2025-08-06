@@ -2,7 +2,9 @@
 import type { InputTypeHTMLAttribute } from 'vue';
 
 const props = defineProps<{
-  modelValue: string
+  min?: number
+  max?: number
+  modelValue: string | number
   placeholder?: string
   error?: string
   type?: InputTypeHTMLAttribute
@@ -21,6 +23,8 @@ const emit = defineEmits<{
       class="w-full bg-white text-black p-2 rounded-md border border-gray-300"
       :class="{ 'border-red-500': props.error }"
       :value="props.modelValue"
+      :max="props.max"
+      :min="props.min"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
     <span
