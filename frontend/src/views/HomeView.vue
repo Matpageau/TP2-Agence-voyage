@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BoldButton from '@/components/shared/Buttons/BoldButton.vue';
 import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelGrid from '@/components/shared/Card/TravelGrid.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
@@ -24,7 +25,7 @@ const filteredTravels = computed(() => {
       travel.destination.toLowerCase().includes(searchValue.value.toLowerCase())
 
     const matchesType = typeValue.value === 'all' || travel.type === typeValue.value
-    const matchsFav = filerValue.value != "fav" || (userStore.currentUser?.liked.includes(travel._id) ?? false)
+    const matchsFav = filerValue.value != "fav" || (userStore.currentUser?.liked.includes(travel._id ?? "") ?? false)
 
     return matchesSearch && matchesType && matchsFav
   })
@@ -59,8 +60,16 @@ const setFilterValue = (val: string) => {
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="w-6/8 h-full flex flex-col">
         <h1 class="font-bold mt-6 text-2xl">{{ t("ourTravels") }}</h1>
-        <div class="flex justify-between mt-3 items-center">
-          <div class="flex">
+        <BoldButton 
+          v-if="userStore.currentUser?.role == 'manager' || userStore.currentUser?.role == 'admin'"
+          class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] text-white w-fit mt-2"
+          :href="`/admin/travel/create`"
+          @click=""
+        >
+          {{ t('create') }}
+        </BoldButton>
+        <div class="flex justify-between mt-2 items-center">
+          <div class="flex w-1/3">
             <TextInput v-model="searchValue" :placeholder="t('search')" type="search"/>
             <select v-model="typeValue" name="type" class="ml-3 h-full text-left pr-10 p-2 border border-gray-300 rounded-md focus:ring focus:ring-black">
               <option value="all">{{ t('allType') }}</option>
@@ -69,7 +78,7 @@ const setFilterValue = (val: string) => {
             </select>
           </div>
           <div class="flex gap-3">
-            <FilterBtn v-if="userStore.currentUser" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
+            <FilterBtn v-if="userStore.currentUser&& userStore.currentUser.role == 'user'" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('favorite') }}
             </FilterBtn>
             <FilterBtn @click="setFilterValue('asc')" :class="filerValue == 'asc' ? 'bg-[var(--cyan)] text-white' : ''">

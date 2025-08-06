@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
 import { useUserStore } from '@/stores/userStore';
-import type { TravelData } from '@/types/Travel';
-import axios from 'axios';
-import { computed, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { onMounted } from 'vue';
 
 const userStore = useUserStore()
 
