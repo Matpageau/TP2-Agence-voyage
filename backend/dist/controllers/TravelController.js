@@ -6,9 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Travel_1 = __importDefault(require("../models/Travel"));
 const createError_1 = __importDefault(require("../utils/createError"));
 const TravelController = {
-    async getAll(_req, res, next) {
+    async getAll(req, res, next) {
         try {
-            const travels = await Travel_1.default.GetAll();
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
+            if ((isNaN(page) || page < 1)) {
+                return next((0, createError_1.default)("Invalid page requested", 400, "INVALID_PAGE"));
+            }
+            if ((isNaN(limit) || limit < 0 || limit > 50)) {
+                return next((0, createError_1.default)("Invalid limit requested", 400, "INVALID_LIMIT"));
+            }
+            const skip = (page - 1) * limit;
+            const travels = await Travel_1.default.GetAll(skip, limit);
             if (travels.length === 0) {
                 return next((0, createError_1.default)("No travel found in database", 404, "TRAVEL_NOT_FOUND"));
             }

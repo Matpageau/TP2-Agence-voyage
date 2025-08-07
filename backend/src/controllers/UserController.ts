@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/User";
+import Travel from "../models/Travel";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
-import Travel from "../models/Travel";
-import { Role, validRole } from "../types/Role";
+import { validRole } from "../types/Role";
 
 const UserController = {
-    async getAll (req: Request, res: Response, next: NextFunction) {
+    async getAll (_req: Request, res: Response, next: NextFunction) {
         try {
             const users = await User.getAll()
             if (users.length === 0) {
@@ -183,11 +183,11 @@ const UserController = {
 
             switch (action) {
                 case 'like':
-                    await like(userId, travelId)
+                    await User.addToLiked(userId, travelId)
                     actionMessage = "added to"
                     break;
                 case 'dislike':
-                    await dislike(userId, travelId)
+                    await User.removeFromLiked(userId, travelId)
                     actionMessage = "deleted from"
                     break;
                 default:
@@ -198,40 +198,44 @@ const UserController = {
         } catch (err) {
             next(err)
         }
-    }
-}
+    },
 
-async function like(userId: string, travelId: string) {
-    const [user, travel] = await Promise.all([
-        User.getById(userId),
-        Travel.getById(travelId)
-    ])
+    async updateCart(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.userId
+            const { action, travelId, quantity } = req.body
+            let result
 
-    if (!user) {
-        throw createError("User not found", 404, "USER_NOT_FOUND")
-    }
+            const [user, travel] = await Promise.all([
+                User.getById(userId),
+                Travel.getById(travelId)
+            ])
+            
+            if (!user) {
+                return next(createError("User not found", 404, "USER_NOT_FOUND"))
+            }
+            if (!travel) {
+                return next(createError("Travel not found", 404, "TRAVEL_NOT_FOUND"))
+            }
+            if (isNaN(quantity) || quantity < 1) {
+                return next(createError("Invalid quantity", 400, "INVALID_QUANTITY"))
+            }
 
-    if (!travel) {
-        throw createError("Travel not found", 404, "TRAVEL_NOT_FOUND")
-    }
-    
-    if(!user.liked.includes(travelId)) {
-      user.liked.push(travelId)
-      await user.save()
-    }
-}
+            switch (action) {
+                case 'add':
+                    result = await User.addToCart(userId, travelId, quantity)
+                    break;
+                case 'remove':
+                    result = await User.deleteFromCart(userId, travelId)
+                    break;
+                default:
+                    return next(createError("Invalid requested action", 400, "INVALID_ACTION"))
+            }
 
-async function dislike(userId: string, travelId: string) {
-    const user = await User.getById(userId)
-    
-    if (!user) {
-        throw createError("User not found", 404, "USER_NOT_FOUND")
-    }
-
-    const index = user.liked.indexOf(travelId)
-    if (index !== -1) {
-        user.liked.splice(index, 1)
-        await user.save()
+            res.status(200).json(result)
+        } catch (err) {
+            next(err)
+        }
     }
 }
 

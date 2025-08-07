@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const UserModel_1 = __importDefault(require("./UserModel"));
 const createError_1 = __importDefault(require("../utils/createError"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const Travel_1 = __importDefault(require("./Travel"));
 class User {
     constructor(user) {
         this.id = user.id || null;
@@ -13,6 +14,7 @@ class User {
         this.password = user.password;
         this.role = user.role;
         this.liked = user.liked;
+        this.cart = user.cart;
     }
     static async verify(user) {
         if (!user.username) {
@@ -23,6 +25,9 @@ class User {
         }
         if (!Array.isArray(user.liked)) {
             user.liked = [];
+        }
+        if (!Array.isArray(user.cart)) {
+            user.cart = [];
         }
         const userFound = await UserModel_1.default.findOne({ username: user.username });
         if (userFound) {
@@ -56,6 +61,61 @@ class User {
             return null;
         }
         return UserModel_1.default.findByIdAndDelete(id);
+    }
+    static async addToLiked(userId, travelId) {
+        const [user, travel] = await Promise.all([
+            User.getById(userId),
+            Travel_1.default.getById(travelId)
+        ]);
+        if (!user) {
+            throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
+        }
+        if (!travel) {
+            throw (0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND");
+        }
+        if (!user.liked.includes(travelId)) {
+            user.liked.push(travelId);
+            await user.save();
+        }
+    }
+    static async removeFromLiked(userId, travelId) {
+        const user = await User.getById(userId);
+        if (!user) {
+            throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
+        }
+        const index = user.liked.indexOf(travelId);
+        if (index !== -1) {
+            user.liked.splice(index, 1);
+            await user.save();
+        }
+    }
+    static async addToCart(userId, travelId, quantity = 1) {
+        const [user, travel] = await Promise.all([
+            User.getById(userId),
+            Travel_1.default.getById(travelId)
+        ]);
+        if (!user) {
+            throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
+        }
+        if (!travel) {
+            throw (0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND");
+        }
+        if (isNaN(quantity) || quantity < 1) {
+            throw (0, createError_1.default)("Invalid quantity", 400, "INVALID_QUANTITY");
+        }
+        const existingItem = user.cart.find(item => item.travelId === travelId);
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        }
+        else {
+            user.cart.push({
+                travelId: travelId,
+                quantity: quantity
+            });
+        }
+        await user.save();
+    }
+    static async deleteFromCart(userId, travelId) {
     }
 }
 exports.default = User;

@@ -28,32 +28,28 @@ class Travel {
     }
 
     static verify(travel: Travel) {
-        if (this.verifyString(travel.title)) {return createError("Invalid title", 409, "INVALID_TITLE")}
-        if (this.verifyString(travel.description)) {return createError("Invalid description", 409, "INVALID_DESCRIPTION")}
-        if (this.verifyString(travel.type)) {return createError("Invalid type", 409, "INVALID_TYPE")}
-        if (this.verifyString(travel.destination)) {return createError("Invalid destination", 409, "INVALID_DESTINATION")}
-        if (this.verifyNumber(travel.poi)) {return createError("Invalid POI", 409, "INVALID_POI")}
-        if (this.verifyNumber(travel.price)) {return createError("Invalid price", 409, "INVALID_PRICE")}
-        if (this.verifyString(travel.departure_date)) {return createError("Invalid departure date", 409, "INVALID_DEP_DATE")}
-        if (this.verifyString(travel.arrival_date)) {return createError("Invalid arrival date", 409, "INVALID_ARR_DATE")}
-        if (this.verifyString(travel.img_url)) {return createError("Invalid image URL", 409, "INVALID_URL")}
+        if (this.isValidString(travel.title)) {return createError("Invalid title", 409, "INVALID_TITLE")}
+        if (this.isValidString(travel.description)) {return createError("Invalid description", 409, "INVALID_DESCRIPTION")}
+        if (this.isValidString(travel.destination)) {return createError("Invalid destination", 409, "INVALID_DESTINATION")}
+        if (this.isValidNumber(travel.price)) {return createError("Invalid price", 409, "INVALID_PRICE")}
+        if (this.isValidString(travel.img_url)) {return createError("Invalid image URL", 409, "INVALID_URL")}
+        if (this.isValidNumber(travel.poi)) {return createError("Invalid POI", 409, "INVALID_POI")}
+        if (this.isValidString(travel.departure_date)) {return createError("Invalid departure date", 409, "INVALID_DEP_DATE")}
+        if (this.isValidString(travel.arrival_date)) {return createError("Invalid arrival date", 409, "INVALID_ARR_DATE")}
+        if (this.isValidString(travel.type)) {return createError("Invalid type", 409, "INVALID_TYPE")}
+        return null
     }
 
-    static verifyString(str: string) {
-        return !str || typeof str !== 'string'
+    static isValidString(str: string) {
+        return str.trim().length !== 0 || typeof str === 'string'
     }
 
-    static verifyNumber(num: number) {
-        return isNaN(num) || num <= 0
+    static isValidNumber(num: number) {
+        return !isNaN(num) || num > 0 || typeof num === 'number'
     }
 
-    static verifyDate(date: Date) {
-        if (!date) return false
-
-    }
-
-    static GetAll() {
-        return TravelModel.find()
+    static GetAll(skip: number, limit: number) {
+        return TravelModel.find().skip(skip).limit(limit)
     }
 
     static getById(id: string) {
