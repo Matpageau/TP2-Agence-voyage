@@ -20,43 +20,40 @@ class Travel {
         this.type = travel.type;
     }
     static verify(travel) {
-        if (this.verifyString(travel.title)) {
+        if (this.isValidString(travel.title)) {
             return (0, createError_1.default)("Invalid title", 409, "INVALID_TITLE");
         }
-        if (this.verifyString(travel.description)) {
+        if (this.isValidString(travel.description)) {
             return (0, createError_1.default)("Invalid description", 409, "INVALID_DESCRIPTION");
         }
-        if (this.verifyString(travel.type)) {
-            return (0, createError_1.default)("Invalid type", 409, "INVALID_TYPE");
-        }
-        if (this.verifyString(travel.destination)) {
+        if (this.isValidString(travel.destination)) {
             return (0, createError_1.default)("Invalid destination", 409, "INVALID_DESTINATION");
         }
-        if (this.verifyNumber(travel.poi)) {
-            return (0, createError_1.default)("Invalid POI", 409, "INVALID_POI");
-        }
-        if (this.verifyNumber(travel.price)) {
+        if (this.isValidNumber(travel.price)) {
             return (0, createError_1.default)("Invalid price", 409, "INVALID_PRICE");
         }
-        if (this.verifyString(travel.departure_date)) {
-            return (0, createError_1.default)("Invalid departure date", 409, "INVALID_DEP_DATE");
-        }
-        if (this.verifyString(travel.arrival_date)) {
-            return (0, createError_1.default)("Invalid arrival date", 409, "INVALID_ARR_DATE");
-        }
-        if (this.verifyString(travel.img_url)) {
+        if (this.isValidString(travel.img_url)) {
             return (0, createError_1.default)("Invalid image URL", 409, "INVALID_URL");
         }
+        if (this.isValidNumber(travel.poi)) {
+            return (0, createError_1.default)("Invalid POI", 409, "INVALID_POI");
+        }
+        if (this.isValidString(travel.departure_date)) {
+            return (0, createError_1.default)("Invalid departure date", 409, "INVALID_DEP_DATE");
+        }
+        if (this.isValidString(travel.arrival_date)) {
+            return (0, createError_1.default)("Invalid arrival date", 409, "INVALID_ARR_DATE");
+        }
+        if (this.isValidString(travel.type)) {
+            return (0, createError_1.default)("Invalid type", 409, "INVALID_TYPE");
+        }
+        return null;
     }
-    static verifyString(str) {
-        return !str || typeof str !== 'string';
+    static isValidString(str) {
+        return str.trim().length !== 0 || typeof str === 'string';
     }
-    static verifyNumber(num) {
-        return isNaN(num) || num <= 0;
-    }
-    static verifyDate(date) {
-        if (!date)
-            return false;
+    static isValidNumber(num) {
+        return !isNaN(num) || num > 0 || typeof num === 'number';
     }
     static GetAll(skip, limit) {
         return TravelModel_1.default.find().skip(skip).limit(limit);

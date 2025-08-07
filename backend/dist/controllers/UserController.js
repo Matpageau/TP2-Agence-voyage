@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../models/User"));
+const Travel_1 = __importDefault(require("../models/Travel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createError_1 = __importDefault(require("../utils/createError"));
 const Role_1 = require("../types/Role");
@@ -179,16 +180,28 @@ const UserController = {
         try {
             const userId = req.params.userId;
             const { action, travelId, quantity } = req.body;
+            let result;
+            const [user, travel] = await Promise.all([
+                User_1.default.getById(userId),
+                Travel_1.default.getById(travelId)
+            ]);
+            if (!user) {
+                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+            }
+            if (!travel) {
+                return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
+            }
             switch (action) {
                 case 'add':
-                    await User_1.default.addToCart(userId, travelId, quantity);
+                    result = await User_1.default.addToCart(userId, travelId, quantity);
                     break;
                 case 'remove':
+                    result = await User_1.default.deleteFromCart(userId, travelId);
                     break;
                 default:
                     return next((0, createError_1.default)("Invalid requested action", 400, "INVALID_ACTION"));
             }
-            res.status(200).json();
+            res.status(200).json(result);
         }
         catch (err) {
             next(err);

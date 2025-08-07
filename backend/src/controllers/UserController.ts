@@ -217,9 +217,6 @@ const UserController = {
             if (!travel) {
                 return next(createError("Travel not found", 404, "TRAVEL_NOT_FOUND"))
             }
-            if (isNaN(quantity) || quantity < 1) {
-                return next(createError("Invalid quantity", 400, "INVALID_QUANTITY"))
-            }
 
             switch (action) {
                 case 'add':

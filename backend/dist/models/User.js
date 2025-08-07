@@ -114,8 +114,26 @@ class User {
             });
         }
         await user.save();
+        return `${user.username} added ${quantity} tickets to ${travel.id} to cart`;
     }
     static async deleteFromCart(userId, travelId) {
+        const user = await User.getById(userId);
+        if (!user) {
+            throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
+        }
+        const index = user.cart.findIndex(item => item.travelId === travelId);
+        const travel = index !== -1 ? user.cart[index] : null;
+        if (!travel) {
+            throw (0, createError_1.default)("Travel not found in cart", 404, "TRAVEL_NOT_FOUND");
+        }
+        if (travel.quantity > 1) {
+            travel.quantity -= 1;
+        }
+        else {
+            user.cart.splice(index, 1);
+        }
+        await user.save();
+        return `${user.username} deleted ${travelId} from cart`;
     }
 }
 exports.default = User;
