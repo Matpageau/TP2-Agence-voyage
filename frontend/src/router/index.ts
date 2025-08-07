@@ -5,7 +5,7 @@ import AdminView from '@/views/AdminView.vue'
 import { useUserStore } from '@/stores/userStore'
 import EditView from '@/views/EditView.vue'
 
-const requireAdmin = async (to: any, from: any, next: NavigationGuardNext) => {
+const requireAdmin = async (to: unknown, from: unknown, next: NavigationGuardNext) => {
   const userStore = useUserStore()
   if (!userStore.currentUser) {
     await userStore.fetchUser(true)

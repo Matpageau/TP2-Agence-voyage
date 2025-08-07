@@ -6,7 +6,7 @@ import BoldButton from '../Buttons/BoldButton.vue';
 import Heart from '@/components/icons/Heart.vue';
 import axios from 'axios';
 import { useUserStore } from '@/stores/userStore';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import defaultImage from '@/assets/img/placeholder-image.png'
 
 const userStore = useUserStore()
@@ -77,7 +77,7 @@ const travelDurationInDays = computed(() => {
               <Heart v-if="userStore.currentUser && userStore.currentUser.role == 'user'" class="h-full aspect-square cursor-pointer" :onclick="handleLikeButton" :class="[isLiked ? 'fill-red-600 stroke-1 stroke-red-600' : '', 'transition-colors']"/>
             </div>
             <BoldButton
-              v-if="userStore.currentUser?.role == 'admin'"
+              v-if="userStore.currentUser?.role == 'admin' || userStore.currentUser?.role == 'manager'"
               class="bg-[var(--orange)] hover:bg-[var(--orange_hover)]"
               :href="travel._id ? `/admin/travel/${travel._id}` : undefined"
               :disabled="true"

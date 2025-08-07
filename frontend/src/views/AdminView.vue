@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import Usercard from '@/components/feature/admin/usercard/Usercard.vue';
+import UserCard from '@/components/feature/admin/usercard/UserCard.vue'
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
-import { useUserStore } from '@/stores/userStore';
 import type { UserData } from '@/types/User';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-const userStore = useUserStore()
 const userList = ref<UserData[]>([])
 
 const fetchUsers = async () => {
@@ -33,8 +31,9 @@ onMounted(() => {
       <div class="w-6/8 h-full flex flex-col">
         <h1 class="font-bold mt-6 text-2xl">Modifier les utilisateurs</h1>
         <div class="flex flex-col mnt-5 border border-neutral-200 rounded-md px-10 py-5 gap-3">
-          <Usercard 
+          <UserCard 
             v-for="user in userList"
+            :key="user._id"
             :user="user"
             @delete="fetchUsers"
           />

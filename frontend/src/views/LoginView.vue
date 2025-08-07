@@ -2,7 +2,7 @@
 import BoldButton from '@/components/shared/Buttons/BoldButton.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import router from '@/router';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -38,9 +38,9 @@ const handleLogin = async () => {
       await userStore.fetchUser(true)
       router.push("/")
     }
-  } catch (err: any) {
-    error.value = err.response.data.code || "UNKNOWN_ERROR"
-    console.error(error)
+  } catch (error) {
+    const err = error as AxiosError<{ code?: string }>
+    console.error(err)
   }
 }
 
@@ -63,9 +63,9 @@ const handleRegister = async () => {
 
       await handleLogin()
     }
-  } catch (err: any) {
-    error.value = err.response.data.code || "UNKNOWN_ERROR"
-    console.error(error)
+  } catch (error) {
+    const err = error as AxiosError<{ code?: string }>
+    console.error(err)
   }
 }
 

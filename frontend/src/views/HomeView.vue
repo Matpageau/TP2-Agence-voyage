@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import InfoBanner from '@/components/shared/Banner/InfoBanner.vue';
 import BoldButton from '@/components/shared/Buttons/BoldButton.vue';
 import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelGrid from '@/components/shared/Card/TravelGrid.vue';
@@ -6,12 +7,22 @@ import TextInput from '@/components/shared/Inputs/TextInput.vue';
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
 import { useUserStore } from '@/stores/userStore';
 import type { TravelData } from '@/types/Travel';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const { t } = useI18n()
+
+const bannerMessage = computed(() => {
+  if (route.query.message === 'saved') {
+    return t('SAVED')
+  }
+  return ''
+})
 const searchValue = ref("")
 const typeValue = ref("all")
 const filerValue = ref("")
@@ -40,8 +51,19 @@ const filteredTravels = computed(() => {
 })
 
 onMounted(async () => {
-  const resTravel = await axios.get(`http://localhost:3000/travels`)
-  travels.value = resTravel.data
+  try {
+    const resTravel = await axios.get(`http://localhost:3000/travels`)
+    travels.value = resTravel.data
+  } catch (error) {
+    const err = error as AxiosError<{ code?: string }>
+    console.error(err)
+  }
+
+  if (route.query.message) {
+    setTimeout(() => {
+      router.replace({ path: '/', query: {} })
+    }, 3000)
+  }
 })
 
 const setFilterValue = (val: string) => {
@@ -57,6 +79,7 @@ const setFilterValue = (val: string) => {
 <template>
   <main class="flex flex-col">
     <Navbar />
+    <InfoBanner v-if="bannerMessage" :text="bannerMessage"/>
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="w-6/8 h-full flex flex-col">
         <h1 class="font-bold mt-6 text-2xl">{{ t("ourTravels") }}</h1>
@@ -64,7 +87,7 @@ const setFilterValue = (val: string) => {
           v-if="userStore.currentUser?.role == 'manager' || userStore.currentUser?.role == 'admin'"
           class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] text-white w-fit mt-2"
           :href="`/admin/travel/create`"
-          @click=""
+          @click="null"
         >
           {{ t('create') }}
         </BoldButton>
@@ -78,7 +101,7 @@ const setFilterValue = (val: string) => {
             </select>
           </div>
           <div class="flex gap-3">
-            <FilterBtn v-if="userStore.currentUser&& userStore.currentUser.role == 'user'" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
+            <FilterBtn v-if="userStore.currentUser && userStore.currentUser.role == 'user'" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('favorite') }}
             </FilterBtn>
             <FilterBtn @click="setFilterValue('asc')" :class="filerValue == 'asc' ? 'bg-[var(--cyan)] text-white' : ''">

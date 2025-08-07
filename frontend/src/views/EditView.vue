@@ -6,7 +6,7 @@ import TextInput from '@/components/shared/Inputs/TextInput.vue';
 import Navbar from '@/components/shared/Navbar/Navbar.vue';
 import router from '@/router';
 import type { TravelData } from '@/types/Travel';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -51,21 +51,30 @@ const handleSave = async () => {
       const resSave = await axios.put(`http://localhost:3000/travels/${travelId}`, travel.value)
   
       if(resSave.data) {
-        router.push('/')
+        router.push({
+          path: '/',
+          query: {
+            message: 'saved'
+          }
+        })
       }
     }else {
       const resSave = await axios.post(`http://localhost:3000/travels`, travel.value)
 
       if(resSave.data) {
-        router.push('/')
+        router.push({
+          path: '/',
+          query: {
+            message: 'saved'
+          }
+        })
       }
     }
-  } catch (error: any) {
-    errorMsg.value = await error.response.data.code || "UNKNOWN_ERROR"
-    console.error(error)
+  } catch (error) {
+    const err = error as AxiosError<{ code?: string }>
+    errorMsg.value = err.response?.data?.code ?? "UNKNOWN_ERROR"
+    console.error(err)
   }
-  console.log(errorMsg.value);
-  
 }
 
 onMounted(async () => {
@@ -81,10 +90,7 @@ onMounted(async () => {
     price.value = travelData.price
     departure_date.value = travelData.departure_date.split("T")[0]
     arrival_date.value = travelData.arrival_date.split("T")[0]
-    imageUrl.value = travelData.img_url
-
-    console.log(travelData);
-    
+    imageUrl.value = travelData.img_url    
   }
 })
 </script>
