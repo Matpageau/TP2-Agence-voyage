@@ -3,7 +3,7 @@ import BaseModal from '@/components/Modal/BaseModal.vue';
 import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelCard from '@/components/shared/Card/TravelCard.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
-import Navbar from '@/components/shared/Navbar/Navbar.vue';
+import NavbarComp from '@/components/shared/Navbar/NavbarComp.vue';
 import router from '@/router';
 import type { TravelData } from '@/types/Travel';
 import axios, { AxiosError } from 'axios';
@@ -108,7 +108,7 @@ onMounted(async () => {
         <FilterBtn @click="isModalOpen = false" class="ml-3 text-white bg-[var(--cyan)] hover:bg-[var(--cyan_hover)]">{{ t('no') }}</FilterBtn>
       </div>
     </BaseModal>
-    <Navbar />
+    <NavbarComp />
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="flex w-6/8 mt-5">
         <div class="w-2/3">

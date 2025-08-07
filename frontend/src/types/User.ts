@@ -5,5 +5,6 @@ export interface UserData {
   username: string
   role: "user" | "manager" | "admin"
   liked: string[]
+  cart: [{travelId: string, quantity: number}]
   createdAt: string
 }

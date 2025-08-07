@@ -2,15 +2,27 @@
 import ShoppingCart from '@/components/icons/ShoppingCart.vue';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
+const router = useRouter()
 const userStore = useUserStore()
 
 const { locale, t } = useI18n()
+
+const numberCart = computed(() => {
+  return userStore.currentUser?.cart?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
+})
 
 const handleLangChange = (lang: "fr" | "en") => {
     locale.value = lang
     document.cookie = `lang=${lang}; path=/; max-age=31536000`
 }
+
+const handleOpenCart = () => {
+  router.push("cart")
+}
+
 </script>
 
 <template>
@@ -18,8 +30,8 @@ const handleLangChange = (lang: "fr" | "en") => {
     <div class="flex">
       <h1 class="font-bold ml-3">Plan B Voyages</h1>
       <div class="flex ml-20 gap-10">
-        <a href="/" @click="">{{ t('travel') }}</a>
-        <a v-if="userStore.currentUser?.role == 'admin' " href="/admin" @click="">Admin</a>
+        <a href="/">{{ t('travel') }}</a>
+        <a v-if="userStore.currentUser?.role != 'user' && userStore.isReady " href="/admin">Admin</a>
       </div>
     </div>
     <div class="flex mr-3 gap-3">
@@ -36,7 +48,12 @@ const handleLangChange = (lang: "fr" | "en") => {
           @click="handleLangChange('en')"
         >EN</p>
       </div>
-      <ShoppingCart class="cursor-pointer"/>
+      <div class="relative inline-block">
+        <ShoppingCart class="cursor-pointer text-2xl" :onClick="handleOpenCart"/>
+        <span class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          {{ numberCart }}
+        </span>
+      </div>
     </div>
   </nav>
 </template>

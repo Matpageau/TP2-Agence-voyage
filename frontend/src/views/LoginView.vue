@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BoldButton from '@/components/shared/Buttons/BoldButton.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
-import Navbar from '@/components/shared/Navbar/Navbar.vue';
+import NavbarComp from '@/components/shared/Navbar/NavbarComp.vue';
 import axios, { AxiosError } from "axios"
 import router from '@/router';
 import { ref, watch } from 'vue';
@@ -73,7 +73,7 @@ const handleRegister = async () => {
 
 <template>
   <main class="flex flex-col h-screen">
-    <Navbar :user="null"/>
+    <NavbarComp :user="null"/>
     <div class="flex w-screen h-full justify-center items-center">
       <div class="flex border-4 border-[var(--marine)] w-1/2 rounded-2xl">
         <div class="bg-[var(--marine)] w-1/2 p-10">

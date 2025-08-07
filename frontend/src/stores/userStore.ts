@@ -6,10 +6,14 @@ import { ref } from "vue"
 export const useUserStore = defineStore('user', () => {
   const currentUser = ref<UserData | null>(null)
   const isFetching = ref(false)
+  const isReady = ref(false)  // <-- nouvel état
   let fetchPromise: Promise<void> | null = null
 
   const fetchUser = async (force = false) => {    
-    if (!force && currentUser.value) return
+    if (!force && currentUser.value) {
+      isReady.value = true
+      return
+    }
     if (isFetching.value && fetchPromise) return fetchPromise
 
     isFetching.value = true
@@ -23,6 +27,7 @@ export const useUserStore = defineStore('user', () => {
       })
       .finally(() => {
         isFetching.value = false
+        isReady.value = true
         fetchPromise = null
       })
 
@@ -31,6 +36,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     currentUser,
+    isReady,
     fetchUser
   }
 })

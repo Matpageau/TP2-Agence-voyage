@@ -4,13 +4,14 @@ import LoginView from '@/views/LoginView.vue'
 import AdminView from '@/views/AdminView.vue'
 import { useUserStore } from '@/stores/userStore'
 import EditView from '@/views/EditView.vue'
+import CartView from '@/views/CartView.vue'
 
 const requireAdmin = async (to: unknown, from: unknown, next: NavigationGuardNext) => {
   const userStore = useUserStore()
   if (!userStore.currentUser) {
     await userStore.fetchUser(true)
   }
-
+  
   if (userStore.currentUser?.role == 'user') {
     return next({ name: 'home' })
   }
@@ -30,6 +31,11 @@ const router = createRouter({
       path: "/login",
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: "/cart",
+      name: 'cart',
+      component: CartView,
     },
     {
       path: "/admin",

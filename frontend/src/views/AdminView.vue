@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserCard from '@/components/feature/admin/usercard/UserCard.vue'
-import Navbar from '@/components/shared/Navbar/Navbar.vue';
+import UserCard from '@/components/shared/Card/UserCard.vue'
+import NavbarComp from '@/components/shared/Navbar/NavbarComp.vue';
 import type { UserData } from '@/types/User';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <main class="flex flex-col">
-    <Navbar />
+    <NavbarComp />
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="w-6/8 h-full flex flex-col">
         <h1 class="font-bold mt-6 text-2xl">Modifier les utilisateurs</h1>

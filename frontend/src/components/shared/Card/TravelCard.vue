@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { DateTime } from 'luxon';
 import BoldButton from '../Buttons/BoldButton.vue';
 import Heart from '@/components/icons/Heart.vue';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useUserStore } from '@/stores/userStore';
 import { computed } from 'vue';
 import defaultImage from '@/assets/img/placeholder-image.png'
@@ -31,7 +31,22 @@ const handleLikeButton = async () => {
     await userStore.fetchUser(true)
     
   } catch (error) {
-    console.error(error)
+    const err = error as AxiosError<{ code?: string }>
+    console.error(err)
+  }
+}
+
+const handleBookButton = async () => {
+  try {
+    await axios.patch(`http://localhost:3000/users/cart/${userStore.currentUser?._id}`, {
+      action: 'add',
+      travelId: props.travel._id
+    })
+
+    userStore.fetchUser(true)
+  } catch (error) {
+    const err = error as AxiosError<{ code?: string }>
+    console.error(err)
   }
 }
 
@@ -87,7 +102,7 @@ const travelDurationInDays = computed(() => {
             <BoldButton
               v-else
               class="bg-[var(--orange)] hover:bg-[var(--orange_hover)]"
-              @click="null"
+              @click="handleBookButton"
             >
               {{ t("book") }}
             </BoldButton>

@@ -4,7 +4,7 @@ import BoldButton from '@/components/shared/Buttons/BoldButton.vue';
 import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelGrid from '@/components/shared/Card/TravelGrid.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
-import Navbar from '@/components/shared/Navbar/Navbar.vue';
+import NavbarComp from '@/components/shared/Navbar/NavbarComp.vue';
 import { useUserStore } from '@/stores/userStore';
 import type { TravelData } from '@/types/Travel';
 import axios, { AxiosError } from 'axios';
@@ -78,7 +78,7 @@ const setFilterValue = (val: string) => {
 
 <template>
   <main class="flex flex-col">
-    <Navbar />
+    <NavbarComp />
     <InfoBanner v-if="bannerMessage" :text="bannerMessage"/>
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="w-6/8 h-full flex flex-col">
