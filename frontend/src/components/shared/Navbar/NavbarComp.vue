@@ -31,7 +31,7 @@ const handleOpenCart = () => {
       <h1 class="font-bold ml-3">Plan B Voyages</h1>
       <div class="flex ml-20 gap-10">
         <a href="/">{{ t('travel') }}</a>
-        <a v-if="userStore.currentUser?.role != 'user' && userStore.isReady " href="/admin">Admin</a>
+        <a v-if="userStore.currentUser && userStore.currentUser?.role != 'user' && userStore.isReady " href="/admin">Admin</a>
       </div>
     </div>
     <div class="flex mr-3 gap-3">

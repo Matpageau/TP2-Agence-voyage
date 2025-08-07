@@ -6,7 +6,7 @@ import { ref } from "vue"
 export const useUserStore = defineStore('user', () => {
   const currentUser = ref<UserData | null>(null)
   const isFetching = ref(false)
-  const isReady = ref(false)  // <-- nouvel état
+  const isReady = ref(false)
   let fetchPromise: Promise<void> | null = null
 
   const fetchUser = async (force = false) => {    

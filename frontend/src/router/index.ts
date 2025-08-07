@@ -11,8 +11,9 @@ const requireAdmin = async (to: unknown, from: unknown, next: NavigationGuardNex
   if (!userStore.currentUser) {
     await userStore.fetchUser(true)
   }
+  console.log(userStore.currentUser);
   
-  if (userStore.currentUser?.role == 'user') {
+  if (userStore.currentUser?.role != 'manager' && userStore.currentUser?.role != 'admin') {
     return next({ name: 'home' })
   }
 
