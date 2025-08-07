@@ -77,7 +77,10 @@ const UserController = {
             if (user.password !== password) {
                 return next((0, createError_1.default)("Invalid password", 401, "INVALID_PASSWORD"));
             }
-            const payload = { id: user.id };
+            const payload = {
+                id: user.id,
+                role: user.role
+            };
             const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
             res.cookie("token", token, {
                 httpOnly: true
@@ -123,6 +126,7 @@ const UserController = {
     },
     async modifyRole(req, res, next) {
         try {
+            const currentUser = req.user;
             const userId = req.params.userId;
             const { role } = req.body;
             if (!Role_1.validRole.includes(role)) {
@@ -132,7 +136,7 @@ const UserController = {
             if (!user) {
                 return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
             }
-            if (user.role === 'manager' && role === 'admin') {
+            if (currentUser.role === 'manager' && role === 'admin') {
                 return next((0, createError_1.default)("Managers are not authorized to assign the admin role", 401, "UNAUTHORIZED"));
             }
             user.role = role;

@@ -3,7 +3,7 @@ import type { TravelData } from '@/types/Travel';
 import { useI18n } from 'vue-i18n';
 import { DateTime } from 'luxon';
 import BoldButton from '../Buttons/BoldButton.vue';
-import Heart from '@/components/icons/Heart.vue';
+import Heart from '@/components/icons/HeartIcon.vue';
 import axios, { AxiosError } from 'axios';
 import { useUserStore } from '@/stores/userStore';
 import { computed } from 'vue';

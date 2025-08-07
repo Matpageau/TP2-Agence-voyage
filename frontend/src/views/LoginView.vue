@@ -17,12 +17,12 @@ const registerUsername = ref("")
 const registerPassword = ref("")
 const registerPasswordConfirm = ref("")
 
-const error = ref("")
+const errorMsg = ref("")
 
 const { t } = useI18n()
 
 watch([loginUsername, loginPassword, registerUsername, registerPassword, registerPasswordConfirm], () => {
-  error.value = ""  
+  errorMsg.value = ""  
 })
 
 const handleLogin = async () => {
@@ -46,7 +46,7 @@ const handleLogin = async () => {
 
 const handleRegister = async () => {
   if(registerPassword.value != registerPasswordConfirm.value) {
-    return error.value = "PASSWORD_NOT_MATCH"
+    return errorMsg.value = "PASSWORD_NOT_MATCH"
   }
 
   const payload = {
@@ -65,7 +65,9 @@ const handleRegister = async () => {
     }
   } catch (error) {
     const err = error as AxiosError<{ code?: string }>
+    errorMsg.value = err.response?.data.code ?? "UNKNOWN_ERROR"
     console.error(err)
+
   }
 }
 
@@ -80,12 +82,12 @@ const handleRegister = async () => {
           <h1 class="font-bold text-6xl text-center">{{ t("login") }}</h1>
           <div class="flex flex-col gap-4 mt-20">
             <TextInput 
-              :error="error === 'USER_NOT_FOUND' ? t('userNotFound') : ''"
+              :error="errorMsg === 'USER_NOT_FOUND' ? t('userNotFound') : ''"
               v-model="loginUsername"
               :placeholder="t('username')"
             />
             <TextInput 
-              :error="error === 'INVALID_PASSWORD' ? t('invalidPassword') : ''"
+              :error="errorMsg === 'INVALID_PASSWORD' ? t('invalidPassword') : ''"
               v-model="loginPassword" 
               :placeholder="t('password')"
               type="password"
@@ -101,18 +103,18 @@ const handleRegister = async () => {
           <h1 class="font-bold text-6xl text-[var(--marine)] text-center">{{ t("register") }}</h1>
           <div class="flex flex-col gap-4 mt-20">
             <TextInput
-              :error="error === 'USERNAME_TAKEN' ? t('usernameAlreadyTaken') : ''"
+              :error="errorMsg === 'USERNAME_TAKEN' ? t('usernameAlreadyTaken') : ''"
               v-model="registerUsername" 
               :placeholder="t('username')"
             />
             <TextInput
-              :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
+              :error="errorMsg === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPassword"
               :placeholder="t('password')"
               type="password"
             />
             <TextInput 
-              :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
+              :error="errorMsg === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPasswordConfirm"
               :placeholder="t('confirmPassword')"
               type="password"
