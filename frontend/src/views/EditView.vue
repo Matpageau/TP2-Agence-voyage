@@ -102,7 +102,7 @@ onMounted(async () => {
       class="text-black"
       @close="isModalOpen = false"
     >
-      <b>Annuler les changements ?</b>
+      <b>{{ t('cancel_change') }}</b>
       <div class="flex justify-center mt-6">
         <FilterBtn @click="router.push('/')" class="text-white bg-[var(--rouge)] hover:bg-[var(--rouge_hover)]">{{ t('yes') }}</FilterBtn>
         <FilterBtn @click="isModalOpen = false" class="ml-3 text-white bg-[var(--cyan)] hover:bg-[var(--cyan_hover)]">{{ t('no') }}</FilterBtn>
@@ -112,7 +112,7 @@ onMounted(async () => {
     <div class="flex flex-col flex-grow items-center justify-center text-black">
       <div class="flex w-6/8 mt-5">
         <div class="w-2/3">
-          <h1 class="font-bold mt-6 text-2xl">Modifier un voyage</h1>
+          <h1 class="font-bold mt-6 text-2xl">{{ t('edit_travel') }}</h1>
           <div class="flex flex-col items-end mt-5">
             <form action="" class="flex flex-col gap-3 w-full">
               <div>
@@ -125,7 +125,7 @@ onMounted(async () => {
                 />
               </div>
               <div class="flex flex-col">
-                <label for="desc">Description</label>
+                <label for="desc">{{ t('description') }}</label>
                 <textarea
                   id="desc"
                   v-model="description" name="" 
@@ -141,14 +141,14 @@ onMounted(async () => {
                 </span>
               </div>
               <div class="flex flex-col">
-                <label for="type">Type</label>
+                <label for="type">{{ t('type') }}</label>
                 <select v-model="type" name="type-select" id="type" class="h-full text-left p-2 border border-gray-300 rounded-md focus:ring focus:ring-black">
                   <option value="inclusive">{{ t('allInclusive') }}</option>
                   <option value="backpack">{{ t('backpack') }}</option>
                 </select>
               </div>
               <div>
-                <label for="des">Destination</label>
+                <label for="des">{{ t('destination') }}</label>
                 <TextInput
                   id="des"
                   v-model="destination"
@@ -157,7 +157,7 @@ onMounted(async () => {
                 />
               </div>
               <div>
-                <label for="pois">Points d'intérets</label>
+                <label for="pois">{{ t('poi') }}</label>
                 <TextInput 
                   id="pois"
                   v-model="poi"
@@ -167,7 +167,7 @@ onMounted(async () => {
                 />
               </div>
               <div>
-                <label for="pri">Price</label>
+                <label for="pri">{{ t('price') }}</label>
                 <TextInput 
                   id="pri"
                   v-model="price"
@@ -178,7 +178,7 @@ onMounted(async () => {
               </div>
               <div class="flex gap-3">
                 <div class="w-1/2">
-                  <label for="ddate">Date de départ</label>
+                  <label for="ddate">{{ t('dep_date') }}</label>
                   <TextInput 
                     id="ddate"
                     v-model="departure_date"
@@ -187,7 +187,7 @@ onMounted(async () => {
                   />
                 </div>
                 <div class="flex-grow">
-                  <label for="adate">Date d'arrivée</label>
+                  <label for="adate">{{ t('arr_date') }}</label>
                   <TextInput 
                     id="adate"
                     v-model="arrival_date"
@@ -197,7 +197,7 @@ onMounted(async () => {
                 </div>
               </div>
               <div>
-                <label for="iUrl">Image URL</label>
+                <label for="iUrl">{{ t('img_url') }}</label>
                 <TextInput
                   id="iUrl"
                   v-model="imageUrl"
