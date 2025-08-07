@@ -58,8 +58,8 @@ class Travel {
         if (!date)
             return false;
     }
-    static GetAll() {
-        return TravelModel_1.default.find();
+    static GetAll(skip, limit) {
+        return TravelModel_1.default.find().skip(skip).limit(limit);
     }
     static getById(id) {
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {

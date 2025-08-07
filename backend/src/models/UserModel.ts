@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import CartItemSchema from "./CartModel";
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -17,7 +18,11 @@ const UserSchema = new mongoose.Schema({
     liked: {
       type: [String],
       default: []
-    }
+    },
+    cart: {
+      type: [CartItemSchema],
+      default: []
+    } 
 }, {timestamps: true})
 
 const UserModel = mongoose.model("users", UserSchema)

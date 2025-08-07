@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createError_1 = __importDefault(require("../utils/createError"));
-const Travel_1 = __importDefault(require("../models/Travel"));
 const Role_1 = require("../types/Role");
 const UserController = {
-    async getAll(req, res, next) {
+    async getAll(_req, res, next) {
         try {
             const users = await User_1.default.getAll();
             if (users.length === 0) {
@@ -160,11 +159,11 @@ const UserController = {
             let actionMessage = "";
             switch (action) {
                 case 'like':
-                    await like(userId, travelId);
+                    await User_1.default.addToLiked(userId, travelId);
                     actionMessage = "added to";
                     break;
                 case 'dislike':
-                    await dislike(userId, travelId);
+                    await User_1.default.removeFromLiked(userId, travelId);
                     actionMessage = "deleted from";
                     break;
                 default:
@@ -175,33 +174,25 @@ const UserController = {
         catch (err) {
             next(err);
         }
+    },
+    async updateCart(req, res, next) {
+        try {
+            const userId = req.params.userId;
+            const { action, travelId, quantity } = req.body;
+            switch (action) {
+                case 'add':
+                    await User_1.default.addToCart(userId, travelId, quantity);
+                    break;
+                case 'remove':
+                    break;
+                default:
+                    return next((0, createError_1.default)("Invalid requested action", 400, "INVALID_ACTION"));
+            }
+            res.status(200).json();
+        }
+        catch (err) {
+            next(err);
+        }
     }
 };
-async function like(userId, travelId) {
-    const [user, travel] = await Promise.all([
-        User_1.default.getById(userId),
-        Travel_1.default.getById(travelId)
-    ]);
-    if (!user) {
-        throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
-    }
-    if (!travel) {
-        throw (0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND");
-    }
-    if (!user.liked.includes(travelId)) {
-        user.liked.push(travelId);
-        await user.save();
-    }
-}
-async function dislike(userId, travelId) {
-    const user = await User_1.default.getById(userId);
-    if (!user) {
-        throw (0, createError_1.default)("User not found", 404, "USER_NOT_FOUND");
-    }
-    const index = user.liked.indexOf(travelId);
-    if (index !== -1) {
-        user.liked.splice(index, 1);
-        await user.save();
-    }
-}
 exports.default = UserController;
