@@ -132,6 +132,9 @@ const UserController = {
             if (!user) {
                 return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
             }
+            if (user.role === 'manager' && role === 'admin') {
+                return next((0, createError_1.default)("Managers are not authorized to assign the admin role", 401, "UNAUTHORIZED"));
+            }
             user.role = role;
             await user.save();
             res.status(200).json(`${user.username} role changed to ${user.role}`);
@@ -180,6 +183,17 @@ const UserController = {
         try {
             const userId = req.params.userId;
             const { action, travelId, quantity } = req.body;
+            let result;
+            const [user, travel] = await Promise.all([
+                User_1.default.getById(userId),
+                Travel_1.default.getById(travelId)
+            ]);
+            if (!user) {
+                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+            }
+            if (!travel) {
+                return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
+            }
             switch (action) {
                 case 'add':
                     result = await User_1.default.addToCart(userId, travelId, quantity);
