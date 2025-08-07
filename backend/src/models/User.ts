@@ -136,13 +136,20 @@ class User {
         }
 
         const index = user.cart.findIndex(item => item.travelId === travelId)
-        if (index !== -1) {
-            user.cart.slice(index, 1)
-            await user.save()
-            return `${user.username} deleted ${travelId} from cart`
-        } else {
+        const travel = index !== -1 ? user.cart[index] : null
+
+        if (!travel) {
             throw createError("Travel not found in cart", 404, "TRAVEL_NOT_FOUND")
         }
+
+        if (travel.quantity > 1) {
+            travel.quantity -= 1
+        } else {
+            user.cart.splice(index, 1)
+        }
+        
+        await user.save()
+        return `${user.username} deleted ${travelId} from cart`
     }
 }
 

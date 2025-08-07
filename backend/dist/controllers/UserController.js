@@ -180,20 +180,6 @@ const UserController = {
         try {
             const userId = req.params.userId;
             const { action, travelId, quantity } = req.body;
-            let result;
-            const [user, travel] = await Promise.all([
-                User_1.default.getById(userId),
-                Travel_1.default.getById(travelId)
-            ]);
-            if (!user) {
-                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
-            }
-            if (!travel) {
-                return next((0, createError_1.default)("Travel not found", 404, "TRAVEL_NOT_FOUND"));
-            }
-            if (isNaN(quantity) || quantity < 1) {
-                return next((0, createError_1.default)("Invalid quantity", 400, "INVALID_QUANTITY"));
-            }
             switch (action) {
                 case 'add':
                     result = await User_1.default.addToCart(userId, travelId, quantity);

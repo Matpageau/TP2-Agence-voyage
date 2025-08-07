@@ -151,6 +151,10 @@ const UserController = {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
 
+            if (user.role === 'manager' && role === 'admin') {
+                return next(createError("Managers are not authorized to assign the admin role", 401, "UNAUTHORIZED" ))
+            }
+
             user.role = role
             await user.save()
 
@@ -216,9 +220,6 @@ const UserController = {
             }
             if (!travel) {
                 return next(createError("Travel not found", 404, "TRAVEL_NOT_FOUND"))
-            }
-            if (isNaN(quantity) || quantity < 1) {
-                return next(createError("Invalid quantity", 400, "INVALID_QUANTITY"))
             }
 
             switch (action) {
