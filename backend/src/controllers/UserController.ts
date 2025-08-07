@@ -151,6 +151,10 @@ const UserController = {
                 return next(createError("User not found", 404, "USER_NOT_FOUND"))
             }
 
+            if (user.role === 'manager' && role === 'admin') {
+                return next(createError("Managers are not authorized to assign the admin role", 401, "UNAUTHORIZED" ))
+            }
+
             user.role = role
             await user.save()
 
