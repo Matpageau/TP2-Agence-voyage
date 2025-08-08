@@ -51,7 +51,7 @@ const logoutUser = () => {
 </script>
 
 <template>
-  <nav class="flex items-center bg-[var(--marine)] h-[70px] justify-between">
+  <nav class="flex items-center bg-[var(--marine)] min-h-[70px] justify-between">
     <div class="flex">
       <BaseModal 
         v-if="isModalOpen"
