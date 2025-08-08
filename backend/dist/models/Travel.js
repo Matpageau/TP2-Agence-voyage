@@ -82,5 +82,8 @@ class Travel {
         }
         return TravelModel_1.default.findByIdAndDelete(id);
     }
+    static count() {
+        return TravelModel_1.default.countDocuments({});
+    }
 }
 exports.default = Travel;

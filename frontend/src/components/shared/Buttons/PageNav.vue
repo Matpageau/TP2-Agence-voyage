@@ -1,17 +1,46 @@
 <script setup lang="ts">
 import ChevronIcon from '@/components/icons/ChevronIcon.vue';
+import { computed } from 'vue';
+
+const props = defineProps<{
+  modelValue: number //Selected Page
+  travelCount: number
+  totalPages: number
+}>()
+
+const activeLeftChevron = computed(() => {
+  return props.modelValue !== 1
+})
+
+const activeRightChevron = computed(() => {
+  return props.totalPages > props.modelValue
+})
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: number): void
+  (e: 'change-page', value: string): void
+}>()
+
+const selectPageByNum = (page: number) => {
+  emit('update:modelValue', page)
+}
+
+const changePage = (dir: string) => {
+  emit('change-page', dir)
+}
 </script>
 
 <template>
-  <div class="flex items-center gap-5">
-    <ChevronIcon direction="left" />
-    <div class="grid grid-cols-5 items-center gap-4 text-lg">
-      <p>1</p>
-      <p>2</p>
-      <p>...</p>
-      <p>9</p>
-      <p>10</p>
+  <div class="flex min-w-40 justify-between items-center gap-5">
+    <ChevronIcon direction="left" @change-page="changePage" :active="activeLeftChevron" />
+    <div class="flex gap-4 text-base">
+      <button 
+        v-for="page in props.totalPages"
+        :key="page" 
+        @click="selectPageByNum(page)" 
+        :class="page === props.modelValue ? 'font-bold text-xl' : 'hover:cursor-pointer hover:text-neutral-400'"
+        >{{ page }}</button>
     </div>
-    <ChevronIcon />
+    <ChevronIcon @change-page="changePage" :active="activeRightChevron" />
   </div>
 </template>

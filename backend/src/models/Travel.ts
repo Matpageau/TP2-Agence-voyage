@@ -80,6 +80,10 @@ class Travel {
         }
         return TravelModel.findByIdAndDelete(id)
     }
+
+    static count() {
+        return TravelModel.countDocuments({})
+    }
 }
 
 export default Travel

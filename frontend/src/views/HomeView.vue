@@ -5,10 +5,11 @@ import FilterBtn from '@/components/shared/Buttons/FilterBtn.vue';
 import TravelGrid from '@/components/shared/Card/TravelGrid.vue';
 import TextInput from '@/components/shared/Inputs/TextInput.vue';
 import NavbarComp from '@/components/shared/Navbar/NavbarComp.vue';
+import PageNav from '@/components/shared/Buttons/PageNav.vue';
 import { useUserStore } from '@/stores/userStore';
 import type { TravelData } from '@/types/Travel';
 import axios, { AxiosError } from 'axios';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -28,6 +29,13 @@ const typeValue = ref("all")
 const filerValue = ref("")
 
 const travels = ref<TravelData[]>([])
+const travelCount = ref<number>(0)
+const selectedPage = ref<number>(1)
+const pageSize = 9
+
+const totalPages = computed(() => {
+  return Math.ceil(travelCount.value / pageSize)
+})
 
 const filteredTravels = computed(() => {
   let result = travels.value.filter((travel) => {
@@ -50,10 +58,23 @@ const filteredTravels = computed(() => {
   return result
 })
 
+watch(selectedPage, () => {
+  fetchTravels()
+})
+
 onMounted(async () => {
+  fetchTravels()
+})
+
+const fetchTravels = async () => {
   try {
-    const resTravel = await axios.get(`http://localhost:3000/travels`)
-    travels.value = resTravel.data
+    const resTravel = await axios.get(`http://localhost:3000/travels`, {
+      params: {
+        page: selectedPage.value
+      }
+    })
+    travels.value = resTravel.data.travels
+    travelCount.value = resTravel.data.travelCount
   } catch (error) {
     const err = error as AxiosError<{ code?: string }>
     console.error(err)
@@ -64,7 +85,7 @@ onMounted(async () => {
       router.replace({ path: '/', query: {} })
     }, 3000)
   }
-})
+}
 
 const setFilterValue = (val: string) => {
   if(filerValue.value == val) {
@@ -74,6 +95,21 @@ const setFilterValue = (val: string) => {
   } 
 }
 
+const changePage = (dir: string) => {
+  dir === 'up' ? pageUp() : pageDown()
+}
+
+const pageUp = () => {
+  if (totalPages.value > selectedPage.value) {
+    selectedPage.value++
+  }
+}
+
+const pageDown = () => {
+  if (selectedPage.value !== 1) {
+    selectedPage.value--
+  }
+}
 </script>
 
 <template>
@@ -101,6 +137,7 @@ const setFilterValue = (val: string) => {
             </select>
           </div>
           <div class="flex gap-3">
+            <PageNav v-if="travelCount > 9" v-model="selectedPage" :travel-count="travelCount" :total-pages="totalPages" @change-page="changePage" />
             <FilterBtn v-if="userStore.currentUser && userStore.currentUser.role == 'user'" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('favorite') }}
             </FilterBtn>
@@ -114,6 +151,9 @@ const setFilterValue = (val: string) => {
         </div>
         <div class="mt-6 flex-grow">
           <TravelGrid :travel="filteredTravels"/>
+        </div>
+        <div class="self-center my-7">
+          <PageNav v-if="travelCount > 9" v-model="selectedPage" :travel-count="travelCount" :total-pages="totalPages" @change-page="changePage" />
         </div>
       </div>
     </div>
