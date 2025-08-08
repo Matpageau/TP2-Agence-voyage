@@ -1,6 +1,5 @@
 import express from "express"
 import UserController from "../controllers/UserController"
-import { roleAuth } from "../middleware/roleAuth"
 import { jwtAuth } from "../middleware/jwtAuth"
 
 const UserRouter = express.Router()
@@ -13,5 +12,6 @@ UserRouter.delete("/:userId", UserController.delete)
 UserRouter.patch("/:userId", UserController.handleLike)
 UserRouter.patch("/role/:userId", jwtAuth, UserController.modifyRole)
 UserRouter.patch("/cart/:userId", UserController.updateCart)
+UserRouter.patch("/clearCart/:userId", UserController.clearCart)
 
 export default UserRouter

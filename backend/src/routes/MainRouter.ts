@@ -9,5 +9,6 @@ MainRouter.use("/users", UserRouter)
 MainRouter.use("/travels", TravelRouter)
 MainRouter.post("/signup", UserController.signUp)
 MainRouter.post("/login", UserController.login)
+MainRouter.post("/logout", UserController.logout)
 
 export default MainRouter

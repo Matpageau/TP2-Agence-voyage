@@ -73,6 +73,25 @@ const UserController = {
         }
     },
 
+    async signUp (req: Request, res: Response, next: NextFunction) {
+        try {
+            const data = req.body
+
+            const err = await User.verify(data)
+            if (err) {
+                return next(err)
+            }
+
+            data.role ||= "user"
+
+            const user = await User.signUp(data)
+
+            res.status(200).json(user)
+        } catch (err) {
+            next(err)
+        }
+    },
+
     async login (req: Request, res: Response, next: NextFunction) {
         try {
             const { username, password } = req.body
@@ -101,20 +120,13 @@ const UserController = {
         }
     },
 
-    async signUp (req: Request, res: Response, next: NextFunction) {
+    async logout(req: Request, res: Response, next: NextFunction) {
         try {
-            const data = req.body
-
-            const err = await User.verify(data)
-            if (err) {
-                return next(err)
+            if (req.cookies.token) {
+                    res.clearCookie("token", {
+                    httpOnly: true
+                });
             }
-
-            data.role ||= "user"
-
-            const user = await User.signUp(data)
-
-            res.status(200).json(user)
         } catch (err) {
             next(err)
         }
@@ -239,6 +251,22 @@ const UserController = {
             }
 
             res.status(200).json(result)
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    async clearCart(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.userId
+            const user = await User.getById(userId)
+
+            if (!user) {
+                return next(createError("User not found", 404, "USER_NOT_FOUND"))
+            }
+
+            await User.clearCart(userId)
+            res.status(200).json('Cart cleared')
         } catch (err) {
             next(err)
         }

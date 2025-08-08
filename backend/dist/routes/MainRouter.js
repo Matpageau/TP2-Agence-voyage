@@ -12,4 +12,5 @@ MainRouter.use("/users", UserRouter_1.default);
 MainRouter.use("/travels", TravelRouter_1.default);
 MainRouter.post("/signup", UserController_1.default.signUp);
 MainRouter.post("/login", UserController_1.default.login);
+MainRouter.post("/logout", UserController_1.default.logout);
 exports.default = MainRouter;

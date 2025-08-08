@@ -67,6 +67,21 @@ const UserController = {
             next(err);
         }
     },
+    async signUp(req, res, next) {
+        try {
+            const data = req.body;
+            const err = await User_1.default.verify(data);
+            if (err) {
+                return next(err);
+            }
+            data.role || (data.role = "user");
+            const user = await User_1.default.signUp(data);
+            res.status(200).json(user);
+        }
+        catch (err) {
+            next(err);
+        }
+    },
     async login(req, res, next) {
         try {
             const { username, password } = req.body;
@@ -91,16 +106,13 @@ const UserController = {
             next(err);
         }
     },
-    async signUp(req, res, next) {
+    async logout(req, res, next) {
         try {
-            const data = req.body;
-            const err = await User_1.default.verify(data);
-            if (err) {
-                return next(err);
+            if (req.cookies.token) {
+                res.clearCookie("token", {
+                    httpOnly: true
+                });
             }
-            data.role || (data.role = "user");
-            const user = await User_1.default.signUp(data);
-            res.status(200).json(user);
         }
         catch (err) {
             next(err);
@@ -209,6 +221,20 @@ const UserController = {
                     return next((0, createError_1.default)("Invalid requested action", 400, "INVALID_ACTION"));
             }
             res.status(200).json(result);
+        }
+        catch (err) {
+            next(err);
+        }
+    },
+    async clearCart(req, res, next) {
+        try {
+            const userId = req.params.userId;
+            const user = await User_1.default.getById(userId);
+            if (!user) {
+                return next((0, createError_1.default)("User not found", 404, "USER_NOT_FOUND"));
+            }
+            await User_1.default.clearCart(userId);
+            res.status(200).json('Cart cleared');
         }
         catch (err) {
             next(err);

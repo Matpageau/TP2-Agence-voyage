@@ -151,6 +151,13 @@ class User {
         await user.save()
         return `${user.username} deleted ${travelId} from cart`
     }
+
+    static async clearCart(userId: string) {
+        return UserModel.updateOne(
+            { _id: userId },
+            { $set: { cart: [] } }
+        )
+    }
 }
 
 export default User

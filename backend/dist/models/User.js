@@ -135,5 +135,8 @@ class User {
         await user.save();
         return `${user.username} deleted ${travelId} from cart`;
     }
+    static async clearCart(userId) {
+        return UserModel_1.default.updateOne({ _id: userId }, { $set: { cart: [] } });
+    }
 }
 exports.default = User;
