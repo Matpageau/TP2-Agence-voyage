@@ -19,10 +19,16 @@ const userStore = useUserStore()
 const { t } = useI18n()
 
 const bannerMessage = computed(() => {
-  if (route.query.message === 'saved') {
-    return t('SAVED')
+  switch (route.query.message) {
+    case 'saved':
+      return t('SAVED')
+
+    case 'succesPaiement':
+      return t('SUCCESPAIEMENT')
+  
+    default:
+      return ''
   }
-  return ''
 })
 const searchValue = ref("")
 const typeValue = ref("all")
@@ -122,7 +128,7 @@ const pageDown = () => {
     <NavbarComp />
     <InfoBanner v-if="bannerMessage" :text="bannerMessage"/>
     <div class="flex flex-col flex-grow items-center justify-center text-black">
-      <div class="w-6/8 h-full flex flex-col">
+      <div class="w-full p-3 md:w-6/8 h-full flex flex-col">
         <h1 class="font-bold mt-6 text-2xl">{{ t("ourTravels") }}</h1>
         <BoldButton 
           v-if="userStore.currentUser?.role == 'manager' || userStore.currentUser?.role == 'admin'"

@@ -47,7 +47,7 @@ watch(role, (newRole) => {
         <option value="manager">Gestionnaire</option>
         <option v-if="props.user.role == 'admin'" value="admin">Admin</option>
       </select>
-      <p class="mx-20">{{ props.user.createdAt.split('T')[0] }}</p>
+      <p class="mx-2 md:mx-20">{{ props.user.createdAt.split('T')[0] }}</p>
       <TrashIcon class="cursor-pointer" :onClick="handleDeleteUser"/>
     </div>
   </div>

@@ -96,7 +96,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="flex flex-col">
+  <main class="flex flex-col h-screen">
     <BaseModal 
       v-if="isModalOpen"
       class="text-black"
@@ -109,11 +109,11 @@ onMounted(async () => {
       </div>
     </BaseModal>
     <NavbarComp />
-    <div class="flex flex-col flex-grow items-center justify-center text-black">
-      <div class="flex w-6/8 mt-5">
-        <div class="w-2/3">
+    <div class="flex flex-col flex-grow items-center text-black">
+      <div class="flex w-full p-3 md:w-6/8 mt-5 gap-5">
+        <div class="flex-2">
           <h1 class="font-bold mt-6 text-2xl">{{ t('edit_travel') }}</h1>
-          <div class="flex flex-col items-end mt-5">
+          <div class="flex flex-col items-end mt-3">
             <form action="" class="flex flex-col gap-3 w-full">
               <div>
                 <label for="tle">{{ t('title') }}</label>
@@ -206,13 +206,13 @@ onMounted(async () => {
                 />
               </div>
             </form>
-            <div class="w-fit mt-6">
+            <div class="flex w-fit mt-6">
               <FilterBtn @click="isModalOpen = true" class="ml-3 bg-[var(--rouge)] hover:bg-[var(--rouge_hover)] text-white">{{ t('cancel') }}</FilterBtn>
               <FilterBtn @click="handleSave" class="ml-3 bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] text-white">{{ t('save') }}</FilterBtn>
             </div>
           </div>
         </div>
-        <div class="flex w-1/3 justify-end">
+        <div class="hidden lg:flex flex-1 w-fit justify-end">
           <div class="w-1/3 min-w-[400px]">
             <TravelCard
               :travel="travel"

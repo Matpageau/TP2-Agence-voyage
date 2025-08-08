@@ -67,7 +67,7 @@ const travelDurationInDays = computed(() => {
           class="bg-[var(--rouge)] hover:bg-[var(--rouge_hover)]"
           @click="handleRemove"
         >
-          Retirer
+          {{ t('remove') }}
         </BoldButton>
       </div>
     </div>

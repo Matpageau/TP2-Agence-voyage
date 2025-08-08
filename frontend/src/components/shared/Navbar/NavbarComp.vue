@@ -30,7 +30,7 @@ const isAdmin = () => {
 </script>
 
 <template>
-  <nav class="flex items-center bg-[var(--marine)] h-[70px] justify-between">
+  <nav class="flex items-center bg-[var(--marine)] min-h-[70px] justify-between">
     <div class="flex">
       <h1 class="font-bold ml-3 hidden md:block">Plan B Voyages</h1>
       <div class="flex ml-5 md:ml-20 gap-10">
