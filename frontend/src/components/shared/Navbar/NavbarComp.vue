@@ -34,18 +34,16 @@ const isAdmin = () => {
 
 const logoutPrompt = () => {
   isModalOpen.value = true
-  document.body.style.overflow = 'hidden'
 }
 
 const closePrompt = () => {
   isModalOpen.value = false
-  document.body.style.overflow = ''
 }
 
-const logoutUser = () => {
-  document.body.style.overflow = ''
+const logoutUser = async () => {
   isModalOpen.value = false
-  axios.post('http://localhost:3000/logout', {}, { withCredentials: true });
+  await axios.post('http://localhost:3000/logout', {}, { withCredentials: true });
+  userStore.currentUser = null
   router.push('/')
 }
 </script>

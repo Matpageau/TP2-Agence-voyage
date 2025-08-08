@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import XIcon from '@/components/icons/XIcon.vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 
 const emit = defineEmits<{
   (e: "close"): void
 }>()
 
+onMounted(() => {
+  document.body.style.overflow = 'hidden'
+})
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = 'visible'
+})
 </script>
 
 <template>
