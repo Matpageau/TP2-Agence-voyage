@@ -103,7 +103,11 @@ const setFilterValue = (val: string) => {
 }
 
 const changePage = (dir: string) => {
-  dir === 'up' ? pageUp() : pageDown()
+  if(dir == 'up') {
+    pageUp()
+  } else {
+    pageDown()
+  }
 }
 
 const pageUp = () => {

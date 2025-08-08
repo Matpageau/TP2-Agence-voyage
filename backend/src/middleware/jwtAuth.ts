@@ -5,14 +5,13 @@ import createError from "../utils/createError";
 
 export const jwtAuth = (req: Request, _: Response, next: NextFunction) => {
     try {
-      const authHeader = req.headers.authorization;
-
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      const token = req.cookies?.token;
+      
+      if (!token) {
         return next(createError("Invalid token", 401, "INVALID_TOKEN"));
       }
 
-      const token = authHeader?.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!);      
 
       (req as any).user = decoded as JwtUser;
       next();

@@ -61,6 +61,7 @@ const messages = {
     INVALID_DEP_DATE: "Date de départ invalide",
     INVALID_ARR_DATE: "Date d'arrivée invalide",
     INVALID_URL: "URL de l'image invalide",
+    SUCCESPAIEMENT: "Votre paiement a été effectué avec succès !"
   },
   en: {
     travel: "Travels",
@@ -122,6 +123,7 @@ const messages = {
     INVALID_DEP_DATE: "Invalid departure date",
     INVALID_ARR_DATE: "Invalid arrival date",
     INVALID_URL: "Invalid image URL",
+    SUCCESPAIEMENT: "Successful paiement !"
   }
 }
 

@@ -35,9 +35,7 @@ const fetchTravels = async () => {
   try {
     const travelRes = await axios.get(`http://localhost:3000/travels`)
 
-    if(travelRes.data) {
-      console.log(travelRes.data.travels);
-      
+    if(travelRes.data) {      
       const cartTravels = travelRes.data.travels.filter((travel: TravelData) => 
         userStore.currentUser?.cart.some(trav => trav.travelId == travel._id)
       )

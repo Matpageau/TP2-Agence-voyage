@@ -24,7 +24,7 @@ const handleDeleteUser = async () => {
 
 const handleRoleChange = async (role: string) => {  
   try {
-    await axios.patch(`http://localhost:3000/users/role/${props.user._id}`, {role: role})
+    await axios.patch(`http://localhost:3000/users/role/${props.user._id}`, {role: role}, {withCredentials: true})
   } catch (error) {
     console.error(error)
   }

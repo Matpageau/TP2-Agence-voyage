@@ -12,6 +12,6 @@ UserRouter.delete("/:userId", UserController.delete)
 UserRouter.patch("/:userId", UserController.handleLike)
 UserRouter.patch("/role/:userId", jwtAuth, UserController.modifyRole)
 UserRouter.patch("/cart/:userId", UserController.updateCart)
-UserRouter.patch("/clearCart/:userId", UserController.clearCart)
+UserRouter.patch("/clear-cart/:userId", UserController.clearCart)
 
 export default UserRouter
