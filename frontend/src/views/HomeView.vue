@@ -96,7 +96,11 @@ const setFilterValue = (val: string) => {
 }
 
 const changePage = (dir: string) => {
-  dir === 'up' ? pageUp() : pageDown()
+  if(dir === 'up') {
+    pageUp()
+  } else {
+    pageDown()
+  }
 }
 
 const pageUp = () => {
@@ -127,8 +131,8 @@ const pageDown = () => {
         >
           {{ t('create') }}
         </BoldButton>
-        <div id="actionContainer" class="flex justify-between mt-2 items-center">
-          <div id="searchContainer" class="flex w-1/3">
+        <div class="flex flex-col lg:flex-row justify-between mt-2 items-center">
+          <div class="flex w-full lg:w-1/3">
             <TextInput v-model="searchValue" :placeholder="t('search')" type="search"/>
             <select v-model="typeValue" name="type" class="ml-3 h-full text-left pr-10 p-2 border border-gray-300 rounded-md focus:ring focus:ring-black">
               <option value="all">{{ t('allType') }}</option>
@@ -136,7 +140,7 @@ const pageDown = () => {
               <option value="backpack">{{ t('backpack') }}</option>
             </select>
           </div>
-          <div id="filterContainer" class="flex gap-3">
+          <div class="flex flex-col md:flex-row gap-3 w-full lg:w-auto justify-center items-center mt-3 lg:mt-0">
             <PageNav v-if="travelCount > 9" v-model="selectedPage" :travel-count="travelCount" :total-pages="totalPages" @change-page="changePage" />
             <FilterBtn v-if="userStore.currentUser && userStore.currentUser.role == 'user'" @click="setFilterValue('fav')" :class="filerValue == 'fav' ? 'bg-[var(--cyan)] text-white' : ''">
               {{ t('favorite') }}
@@ -159,19 +163,3 @@ const pageDown = () => {
     </div>
   </main>
 </template>
-
-<style scoped>
-@media (max-width: 1200px) {
-  #actionContainer {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  #searchContainer {
-    width: 100%;
-  }
-  #filterContainer {
-    width: 100%;
-    justify-content: center;
-  }
-}
-</style>

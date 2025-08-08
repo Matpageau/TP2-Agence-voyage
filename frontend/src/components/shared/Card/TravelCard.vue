@@ -63,22 +63,22 @@ const travelDurationInDays = computed(() => {
 
 <template>
   <div class="flex flex-col w-full border-1 border-neutral-300 h-[500px] rounded-xl overflow-hidden">
-    <div class="relative h-1/2">
+    <div class="relative h-1/2 shrink-0">
       <img :src="props.travel.img_url && props.travel.img_url.trim() !== '' ? props.travel.img_url : defaultImage" alt="travel img" class="w-full h-full object-cover" />
       <h1 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-5xl font-bold text-center text-nowrap">{{ props.travel.destination }}</h1>
     </div>
     <div class="flex flex-col justify-between p-2 flex-grow">
-      <div class="flex justify-between">
-        <div class="w-full">
-          <h2 class="text-3xl font-bold">{{ props.travel.title }}</h2>
-          <p class="w-2/3 text-sm">{{ props.travel.description }}</p>
+      <div class="flex min-h-0">
+        <div class="flex-2 min-w-0">
+          <h2 class="text-3xl font-bold break-words line-clamp-2">{{ props.travel.title }}</h2>
+          <p class="text-sm line-clamp-3">{{ props.travel.description }}</p>
         </div>
-        <div class="w-1/2 justify-end text-end">
+        <div class="flex-1 w-1/2 shrink-0 text-end">
           <h1 class="font-bold">{{ props.travel.type == "backpack" ? t("backpack") : t("inclusive") }}</h1>
           <p><b>{{ props.travel.poi }}</b> {{ t("pois", props.travel.poi) }}</p>
         </div>
       </div>
-      <div class="flex justify-between items-end">
+      <div class="flex justify-between items-end shrink-0">
         <div>
           <p v-if="props.travel.departure_date">{{ DateTime.fromISO(props.travel.departure_date).setLocale(locale).toFormat("DDD") }}</p>
           <p v-if="travelDurationInDays">{{ t("days", Math.round(travelDurationInDays)) }}</p>

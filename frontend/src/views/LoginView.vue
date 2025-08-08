@@ -17,12 +17,12 @@ const registerUsername = ref("")
 const registerPassword = ref("")
 const registerPasswordConfirm = ref("")
 
-const error = ref("")
+const errorMsg = ref("")
 
 const { t } = useI18n()
 
 watch([loginUsername, loginPassword, registerUsername, registerPassword, registerPasswordConfirm], () => {
-  error.value = ""  
+  errorMsg.value = ""  
 })
 
 const handleLogin = async () => {
@@ -40,13 +40,14 @@ const handleLogin = async () => {
     }
   } catch (error) {
     const err = error as AxiosError<{ code?: string }>
+    errorMsg.value = err.response?.data?.code ?? "UNKNOWN_ERROR"
     console.error(err)
   }
 }
 
 const handleRegister = async () => {
   if(registerPassword.value != registerPasswordConfirm.value) {
-    return error.value = "PASSWORD_NOT_MATCH"
+    return errorMsg.value = "PASSWORD_NOT_MATCH"
   }
 
   const payload = {
@@ -65,6 +66,7 @@ const handleRegister = async () => {
     }
   } catch (error) {
     const err = error as AxiosError<{ code?: string }>
+    errorMsg.value = err.response?.data?.code ?? "UNKNOWN_ERROR"
     console.error(err)
   }
 }
@@ -72,47 +74,46 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <main class="flex flex-col h-screen">
+  <main class="flex flex-col">
     <NavbarComp :user="null"/>
-    <div class="flex w-screen h-full justify-center items-center">
-      <div class="flex border-4 border-[var(--marine)] w-1/2 rounded-2xl">
-        <div class="bg-[var(--marine)] w-1/2 p-10">
-          <h1 class="font-bold text-6xl text-center">{{ t("login") }}</h1>
-          <div class="flex flex-col gap-4 mt-20">
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform flex flex-col md:flex-row border-4 border-[var(--marine)] w-1/2 rounded-2xl">
+        <div class="bg-[var(--marine)] w-full md:w-1/2 p-2 md:p-10">
+          <h1 class="font-bold text-2xl md:text-6xl text-center">{{ t("login") }}</h1>
+          <div class="flex flex-col gap-4 mt-5 lg:mt-20">
             <TextInput 
-              :error="error === 'USER_NOT_FOUND' ? t('userNotFound') : ''"
+              :error="errorMsg === 'USER_NOT_FOUND' ? t('userNotFound') : ''"
               v-model="loginUsername"
               :placeholder="t('username')"
             />
             <TextInput 
-              :error="error === 'INVALID_PASSWORD' ? t('invalidPassword') : ''"
+              :error="errorMsg === 'INVALID_PASSWORD' ? t('invalidPassword') : ''"
               v-model="loginPassword" 
               :placeholder="t('password')"
               type="password"
             />
           </div>
-          <div class="flex justify-center w-full mt-30">
+          <div class="flex justify-center w-full mt-5 lg:mt-30">
             <BoldButton class="bg-[var(--cyan)] hover:bg-[var(--cyan_hover)] disabled:bg-[var(--cyan)]/50" @click="handleLogin" :disabled="!loginUsername || !loginPassword">
               {{ t("login") }}
             </BoldButton>
           </div>
         </div>
-        <div class="w-1/2 p-10">
-          <h1 class="font-bold text-6xl text-[var(--marine)] text-center">{{ t("register") }}</h1>
-          <div class="flex flex-col gap-4 mt-20">
+        <div class="w-full md:w-1/2 p-2 md:p-10">
+          <h1 class="font-bold text-2xl md:text-6xl text-[var(--marine)] text-center">{{ t("register") }}</h1>
+          <div class="flex flex-col gap-4 mt-5 lg:mt-20">
             <TextInput
-              :error="error === 'USERNAME_TAKEN' ? t('usernameAlreadyTaken') : ''"
+              :error="errorMsg === 'USERNAME_TAKEN' ? t('usernameAlreadyTaken') : ''"
               v-model="registerUsername" 
               :placeholder="t('username')"
             />
             <TextInput
-              :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
+              :error="errorMsg === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPassword"
               :placeholder="t('password')"
               type="password"
             />
             <TextInput 
-              :error="error === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
+              :error="errorMsg === 'PASSWORD_NOT_MATCH' ? t('passwordNotMatch') : ''"
               v-model="registerPasswordConfirm"
               :placeholder="t('confirmPassword')"
               type="password"
@@ -125,6 +126,5 @@ const handleRegister = async () => {
           </div>
         </div>
       </div>
-    </div>
   </main>
 </template>

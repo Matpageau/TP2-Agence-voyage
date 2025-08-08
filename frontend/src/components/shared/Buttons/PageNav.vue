@@ -31,7 +31,7 @@ const changePage = (dir: string) => {
 </script>
 
 <template>
-  <div class="flex min-w-40 justify-between items-center gap-5">
+  <div class="flex w-fit justify-between items-center gap-1 md:gap-3 lg:gap-5">
     <ChevronIcon direction="left" @change-page="changePage" :active="activeLeftChevron" />
     <div class="flex gap-4 text-base">
       <button 
