@@ -12,18 +12,10 @@ const TravelController = {
                 return next(createError("Invalid page requested", 400, "INVALID_PAGE"))
             }
 
-            let travels = []
-            let travelCount
+            const skip = (page - 1) * limit
+            let travelCount = await Travel.count()
+            let travels = await Travel.getAll(skip, limit)
 
-            if (limit) {
-                const skip = (page - 1) * limit
-                travelCount = await Travel.count()
-                travels = await Travel.getWithLimit(skip, limit)
-            } else {
-                travels = await Travel.getAll()
-                travelCount = 0
-            }
-            
             if (travels.length === 0) {
                 return next(createError("No travel found in database", 404, "TRAVEL_NOT_FOUND"))
             }

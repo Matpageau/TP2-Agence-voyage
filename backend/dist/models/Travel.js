@@ -55,11 +55,15 @@ class Travel {
     static isInvalidNumber(num) {
         return isNaN(num) || num < 0 || typeof num !== 'number';
     }
-    static getAll() {
-        return TravelModel_1.default.find();
-    }
-    static getWithLimit(skip, limit) {
-        return TravelModel_1.default.find().skip(skip).limit(limit);
+    static async getAll(skip, limit) {
+        let query = TravelModel_1.default.find();
+        if (skip) {
+            query = query.skip(skip);
+        }
+        if (limit) {
+            query = query.limit(limit);
+        }
+        return await query.exec();
     }
     static getById(id) {
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {

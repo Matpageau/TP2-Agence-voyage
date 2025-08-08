@@ -13,17 +13,9 @@ const TravelController = {
             if ((isNaN(page) || page < 1)) {
                 return next((0, createError_1.default)("Invalid page requested", 400, "INVALID_PAGE"));
             }
-            let travels = [];
-            let travelCount;
-            if (limit) {
-                const skip = (page - 1) * limit;
-                travelCount = await Travel_1.default.count();
-                travels = await Travel_1.default.getWithLimit(skip, limit);
-            }
-            else {
-                travels = await Travel_1.default.getAll();
-                travelCount = 0;
-            }
+            const skip = (page - 1) * limit;
+            let travelCount = await Travel_1.default.count();
+            let travels = await Travel_1.default.getAll(skip, limit);
             if (travels.length === 0) {
                 return next((0, createError_1.default)("No travel found in database", 404, "TRAVEL_NOT_FOUND"));
             }

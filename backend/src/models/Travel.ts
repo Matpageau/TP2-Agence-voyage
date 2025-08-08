@@ -48,12 +48,15 @@ class Travel {
         return isNaN(num) || num < 0 || typeof num !== 'number'
     }
 
-    static getAll() {
-        return TravelModel.find()
-    }
-
-    static getWithLimit(skip: number, limit: number) {
-        return TravelModel.find().skip(skip).limit(limit)
+    static async getAll(skip: number, limit: number) {
+        let query = TravelModel.find()
+        if (skip) {
+            query = query.skip(skip)
+        }
+        if (limit) {
+            query = query.limit(limit)
+        }
+        return await query.exec()
     }
 
     static getById(id: string) {
