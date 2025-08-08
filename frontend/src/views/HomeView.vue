@@ -70,7 +70,8 @@ const fetchTravels = async () => {
   try {
     const resTravel = await axios.get(`http://localhost:3000/travels`, {
       params: {
-        page: selectedPage.value
+        page: selectedPage.value,
+        limit: 9
       }
     })
     travels.value = resTravel.data.travels

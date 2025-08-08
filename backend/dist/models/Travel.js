@@ -20,42 +20,45 @@ class Travel {
         this.type = travel.type;
     }
     static verify(travel) {
-        if (this.isInValidString(travel.title)) {
+        if (this.isInvalidString(travel.title)) {
             return (0, createError_1.default)("Invalid title", 409, "INVALID_TITLE");
         }
-        if (this.isInValidString(travel.description)) {
+        if (this.isInvalidString(travel.description)) {
             return (0, createError_1.default)("Invalid description", 409, "INVALID_DESCRIPTION");
         }
-        if (this.isInValidString(travel.destination)) {
+        if (this.isInvalidString(travel.destination)) {
             return (0, createError_1.default)("Invalid destination", 409, "INVALID_DESTINATION");
         }
-        if (this.isInValidNumber(travel.price)) {
+        if (this.isInvalidNumber(travel.price)) {
             return (0, createError_1.default)("Invalid price", 409, "INVALID_PRICE");
         }
-        if (this.isInValidString(travel.img_url)) {
+        if (this.isInvalidString(travel.img_url)) {
             return (0, createError_1.default)("Invalid image URL", 409, "INVALID_URL");
         }
-        if (this.isInValidNumber(travel.poi)) {
+        if (this.isInvalidNumber(travel.poi)) {
             return (0, createError_1.default)("Invalid POI", 409, "INVALID_POI");
         }
-        if (this.isInValidString(travel.departure_date)) {
+        if (this.isInvalidString(travel.departure_date)) {
             return (0, createError_1.default)("Invalid departure date", 409, "INVALID_DEP_DATE");
         }
-        if (this.isInValidString(travel.arrival_date)) {
+        if (this.isInvalidString(travel.arrival_date)) {
             return (0, createError_1.default)("Invalid arrival date", 409, "INVALID_ARR_DATE");
         }
-        if (this.isInValidString(travel.type)) {
+        if (this.isInvalidString(travel.type)) {
             return (0, createError_1.default)("Invalid type", 409, "INVALID_TYPE");
         }
         return null;
     }
-    static isInValidString(str) {
+    static isInvalidString(str) {
         return typeof str !== 'string' || !str;
     }
-    static isInValidNumber(num) {
+    static isInvalidNumber(num) {
         return isNaN(num) || num < 0 || typeof num !== 'number';
     }
-    static GetAll(skip, limit) {
+    static getAll() {
+        return TravelModel_1.default.find();
+    }
+    static getWithLimit(skip, limit) {
         return TravelModel_1.default.find().skip(skip).limit(limit);
     }
     static getById(id) {

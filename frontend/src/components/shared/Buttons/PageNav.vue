@@ -33,12 +33,12 @@ const changePage = (dir: string) => {
 <template>
   <div class="flex min-w-40 justify-between items-center gap-5">
     <ChevronIcon direction="left" @change-page="changePage" :active="activeLeftChevron" />
-    <div class="flex gap-4 text-base">
+    <div class="flex gap-4 text-xl">
       <button 
         v-for="page in props.totalPages"
         :key="page" 
         @click="selectPageByNum(page)" 
-        :class="page === props.modelValue ? 'font-bold text-xl' : 'hover:cursor-pointer hover:text-neutral-400'"
+        :class="page === props.modelValue ? 'font-bold' : 'hover:cursor-pointer hover:text-neutral-400'"
         >{{ page }}</button>
     </div>
     <ChevronIcon @change-page="changePage" :active="activeRightChevron" />

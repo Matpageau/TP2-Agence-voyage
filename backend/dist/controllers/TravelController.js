@@ -9,13 +9,21 @@ const TravelController = {
     async getAll(req, res, next) {
         try {
             const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit);
             if ((isNaN(page) || page < 1)) {
                 return next((0, createError_1.default)("Invalid page requested", 400, "INVALID_PAGE"));
             }
-            const limit = 9;
-            const skip = (page - 1) * limit;
-            const travelCount = await Travel_1.default.count();
-            const travels = await Travel_1.default.GetAll(skip, limit);
+            let travels = [];
+            let travelCount;
+            if (limit) {
+                const skip = (page - 1) * limit;
+                travelCount = await Travel_1.default.count();
+                travels = await Travel_1.default.getWithLimit(skip, limit);
+            }
+            else {
+                travels = await Travel_1.default.getAll();
+                travelCount = 0;
+            }
             if (travels.length === 0) {
                 return next((0, createError_1.default)("No travel found in database", 404, "TRAVEL_NOT_FOUND"));
             }
