@@ -14,7 +14,11 @@ const requireAdmin = async (to: unknown, from: unknown, next: NavigationGuardNex
   
   console.log(userStore.currentUser?.role);
   
+<<<<<<< Updated upstream
  if (!userStore.currentUser || userStore.currentUser?.role == 'user') {
+=======
+  if (!userStore.currentUser || userStore.currentUser?.role == 'user') {
+>>>>>>> Stashed changes
     return next({ name: 'home' })
   }
 
